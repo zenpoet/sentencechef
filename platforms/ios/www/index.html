@@ -38,23 +38,20 @@ function done() {
 	var phrase;
 	var results = SpinningWheel.getSelectedValues();
 
-	for (i = 0; i < results.values.length; ++i) {
-		results.values[i].replace('/&nbsp;/g', '');
-	}
-
 	phrase = results.values[0];             // subject
-	if (results.values[1] != '')            // neg1
+	if (results.values[1] != '&nbsp;')            // neg1
 		phrase += ' ' + results.values[1];
 	else
-		phrase += ' ' + results.values[1];
+		phrase += ' ';
 	phrase += ' ' + results.values[2];      // verb stem
 	phrase += results.values[3];            // verb ending
-	if (results.values[4] != '')            // neg2
+	if (results.values[4] != '&nbsp;')            // neg2
 		phrase += ' ' + results.values[4];
 	else
-		phrase += ' ' + results.values[4];
+		phrase += ' ';
 	phrase += ' ' + results.values[5];      // partitif
 	phrase += ' ' + results.values[6];      // food
+	phrase += '.';      // so that speech synthesis has proper intonation
 
 	document.getElementById('result').innerHTML = phrase + '<br />keys: ' + results.keys.join(', ') + "<br />";  
 

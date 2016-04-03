@@ -77,10 +77,12 @@
 #sw-slots .sw-readonly { background:#ddd; }
 
 #sw-slots li {
-	padding:0 8px;
+/*	padding:0 8px; */
+	padding:0 4px; 
 	height:44px;
 	overflow:hidden;
-	font:bold 24px/44px Helvetica,sans-serif;
+/*	font:bold 24px/44px Helvetica,sans-serif; */
+	font:bold 18px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
 }
 
 #sw-frame {

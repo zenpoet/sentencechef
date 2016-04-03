@@ -143,6 +143,7 @@ verb_stem_er.push("chauff");
 verb_stem_er.push("prépar");
 verb_stem_er.push("congel");
 verb_stem_er.push("congèl");
+verb_stem_er.push("congél");
 verb_stem_er.push("préfér");
 verb_stem_er.push("préfèr");
 verb_stem_er.sort();
@@ -263,12 +264,12 @@ function isInList(arr, element)
 
 function subjectVerbAgreement_ER(subject, verb_stem, verb_ending) {
   // check special case for préférer
-  if (verb_stem=='préfér') { 
+  if (verb_stem=='préfér' || 'congél') { 
     // must be nous vous or equivalent
 	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi))
       return false;
   }
-  else if (verb_stem=='préfèr') {
+  else if (verb_stem=='préfèr' || 'congèl') {
 	if (subject == "Nous" || subject == "Vous" || isInList(subject, subject_plus_moi))
       return false;
   }

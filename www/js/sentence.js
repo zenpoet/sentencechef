@@ -467,10 +467,8 @@ function is_food_feminine(food)
 }
 
 
-function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positive)
+function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positive, reason)
 {
-//	console.log("verb_stem: " + verb_stem + " partitif: " + partitif + " food: " + food);
-
 	if (isInList(verb_stem, preference_verbs))
 	{
 		if (starts_with_vowel(food) && partitif == "l'")
@@ -526,17 +524,22 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 		}
 		else // sentence negative
 		{
-			if (partitif != 'de' && partitif != "d'") {
+			if (!isInList(partitif, ["de", "d'"])) {
+				reason.push('negative_sentence_d');
 				return false;
 			}
+			else if (partitif == 'de' && !starts_with_vowel(food))
+				return true;
 			else if (starts_with_vowel(food) && partitif == "d'") {
 				return true;
 			} else {
+				reason.push('negative_sentence_unknown');
 				return false;
 			}
 		}
 	}		
 
+	reason.push('negative_sentence_unknown');
 	return false;
 }
 
@@ -611,8 +614,6 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 			(negation1 == "ne" && starts_with_vowel(verb_stem)) ) {
 			reason.push('negation1');
 			reason.push('verb_vowel_agree');
-			// ne aime
-			// n' cherche
 			if (starts_with_vowel(verb_stem))
 				reason.push('verb_start_vowel');
 			else
@@ -623,7 +624,6 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		}
 	}
 
-	// check subject/food gender
 	if (!foodPartitifAgreement(partitif, food)) {
 		reason.push('partitif');
 		reason.push('food');
@@ -638,7 +638,7 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		return false;
 	}
 
-	if (partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positive) != true)
+	if (partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positive, reason) != true)
 	{
 		console.log("partitif does not agree with verb preference");
 		reason.push('verb_stem');
@@ -784,6 +784,8 @@ function done() {
 	else if (valid_sentence && (!starts_with_vowel(food))) {
 		phrase += ' '; 
 	}
+	else if (!valid_sentence && starts_with_vowel(food)) 
+		phrase += ' '; 
 	else if (!isInList('food_partitif_liaison', reason)) {
 		phrase += ' '; 
 	}
@@ -802,7 +804,7 @@ function done() {
 
 	if (valid_sentence) {
 		phrase = phrase.replace(re, ' ');
-		document.getElementById('result').innerHTML = 'Bravo: ' + phrase;  
+		document.getElementById('result').innerHTML = '<span class="bravo">Bravo:</span> ' + phrase;  
 		var utterThis = new SpeechSynthesisUtterance(phrase);
 		utterThis.lang = 'FR';
 		window.speechSynthesis.speak(utterThis);
@@ -825,6 +827,8 @@ function done() {
 				hint = '<span class="hint">masculine, feminine, or plural?</span>';
 		else if (isInList('food_partitif_liaison', reason))
 				hint = '<span class="hint">watch the article and the first letter of the noun</span>';
+		else if (isInList('negative_sentence_d', reason))
+				hint = "<span class='hint'>negative sentence, use <b>de</b> or <b>d'</b></span>";
 		else
 			hint = reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;

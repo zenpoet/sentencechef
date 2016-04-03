@@ -264,13 +264,13 @@ function isInList(arr, element)
 }
 
 function subjectVerbAgreement_ER(subject, verb_stem, verb_ending) {
-  // check special case for préférer
-  if (verb_stem=='préfér' || 'congél') { 
+  // check special case for préférer and congeler
+  if (verb_stem=='préfér' || verb_stem=='congél') { 
     // must be nous vous or equivalent
 	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi))
       return false;
   }
-  else if (verb_stem=='préfèr' || 'congèl') {
+  else if (verb_stem=='préfèr' || verb_stem=='congèl') {
 	if (subject == "Nous" || subject == "Vous" || isInList(subject, subject_plus_moi))
       return false;
   }
@@ -282,8 +282,9 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending) {
   } else if (subject == "Tu" && verb_ending == "es") {
     return true;
   } else if (subject == "Il" && verb_ending == "e") {
-    return true;}
-    else if (subject == "On" && verb_ending == "e") {return true;
+    return true;
+  } else if (subject == "On" && verb_ending == "e") {
+	return true;
   } else if (subject == "Elle" && verb_ending == "e") {
     return true;
   } else if (subject == "Nous" && verb_ending == "ons") {
@@ -568,7 +569,7 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 
 	if (subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending) != true)
 	{
-		console.log("subject does not agree with verb ending");
+		console.log("subject does not agree with verb ending" + subject + verb_stem + verb_ending);
 		isValid = false;
 	}
 
@@ -730,4 +731,8 @@ console.log("===");
 console.log(isValidSentence("Nous", "", "aim", "ons", "", "le", "chocolat"));
 console.log("===");
 console.log(isValidSentence("Nous", "n'", "aim", "ons", "pas", "le", "beurre"));
+console.log("===");
+console.log(isValidSentence("On", "n'", "aim", "e", "pas", "le", "beurre"));
+console.log("===");
+console.log(isValidSentence("On", "", "aim", "e", "", "le", "beurre"));
 

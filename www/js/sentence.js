@@ -556,6 +556,16 @@ function foodPartitifAgreement(partitif, food)
 		return true;
 }
 
+function foodPartitifLiaison(partitif, food)
+{
+	if (isInList(partitif, ["d'", "de l'", "l'"]) && !starts_with_vowel(food))
+		return false;
+	else if (starts_with_vowel(food) && !isInList(partitif, ["d'", "de l'", "l'"]))
+		return false;
+	else
+		return true;
+}
+
 function is_sentence_positive(negation1, negation2)
 {
 	return !(negation1=='ne' || negation1=="n'" || negation2=='pas');
@@ -614,11 +624,17 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 	}
 
 	// check subject/food gender
-	if (!foodPartitifAgreement(partitif, food))
-	{
+	if (!foodPartitifAgreement(partitif, food)) {
 		reason.push('partitif');
 		reason.push('food');
 		reason.push('food_partitif_agreement');
+		return false;
+	}
+
+	if (!foodPartitifLiaison(partitif, food)) {
+		reason.push('partitif');
+		reason.push('food');
+		reason.push('food_partitif_liaison');
 		return false;
 	}
 
@@ -763,7 +779,8 @@ function done() {
 	if (!valid_sentence && isInList('partitif', reason))
 		phrase += '</span>';
 
-	phrase += ' ';
+	if (!starts_with_vowel(food))
+		phrase += ' ';
 	if (!valid_sentence && isInList('food', reason))
 		phrase += '<span class="mistake">'; 
     phrase += food;      // food
@@ -796,6 +813,8 @@ function done() {
 				hint = '<span class="hint">what are you missing?</span>';
 		else if (isInList('food_partitif_agreement', reason))
 				hint = '<span class="hint">masculine, feminine, or plural?</span>';
+		else if (isInList('food_partitif_liaison', reason))
+				hint = '<span class="hint">watch the article and the first letter of the noun</span>';
 		else
 			hint = reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
@@ -873,4 +892,6 @@ console.log("===");
 console.log(isValidSentence("Elle", "", "cherch", "e", "", "le", "beurre"));
 console.log("===");
 console.log(isValidSentence("Elle", "n'", "cherch", "e", "pas", "de", "bonbon"));
+console.log("===");
+console.log(isValidSentence("Elle", "", "cherch", "e", "", "de la", "boulette de viande"));
 

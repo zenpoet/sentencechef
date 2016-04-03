@@ -6,64 +6,11 @@
 
 	<link rel="stylesheet" href="css/spinningwheel.css" type="text/css" media="all" />
 	<script type="text/javascript" src="js/spinningwheel.js"></script>
+	<script type="text/javascript" src="js/sentence.js"></script>
 
 	<title>Sentence Chef</title>
 
 <script type="text/javascript">
-
-function openFrench() {
-	var subject = {0: 'Je', 1: 'Tu', 2: 'Il', 3: 'Jean et moi'};
-	var neg1 = {1: "&nbsp;", 2: "n'", 3: 'ne'};
-	var verb = {1: 'aim', 2: 'mang', 3: 'detest', 4: 'ador' };
-	var verb_ending = {1: 'e', 2: 'es', 3: 'ions', 4: 'ent' };
-	var neg2 = {1: "&nbsp;", 2: 'pas'};
-	var partitif = {1: 'le', 2: 'du', 3: 'de la', 4: 'des', 5: 'de' };
-	var food = {1: 'tomates', 2: 'framboise', 3: 'fraises', 4: 'gratin' };
-
-	SpinningWheel.addSlot(subject, '', 3);
-	SpinningWheel.addSlot(neg1, 'right', 2);
-	SpinningWheel.addSlot(verb, 'right', 3);
-	SpinningWheel.addSlot(verb_ending, 'left', 3);
-	SpinningWheel.addSlot(neg2,'left',2);
-	SpinningWheel.addSlot(partitif,'',4);
-	SpinningWheel.addSlot(food,'left',3);
-	
-	SpinningWheel.setCancelAction(cancel);
-	SpinningWheel.setDoneAction(done);
-	
-	SpinningWheel.open();
-}
-
-function done() {
-	var phrase;
-	var results = SpinningWheel.getSelectedValues();
-
-	phrase = results.values[0];             // subject
-	if (results.values[1] != '&nbsp;')            // neg1
-		phrase += ' ' + results.values[1];
-	else
-		phrase += ' ';
-	phrase += ' ' + results.values[2];      // verb stem
-	phrase += results.values[3];            // verb ending
-	if (results.values[4] != '&nbsp;')            // neg2
-		phrase += ' ' + results.values[4];
-	else
-		phrase += ' ';
-	phrase += ' ' + results.values[5];      // partitif
-	phrase += ' ' + results.values[6];      // food
-	phrase += '.';      // so that speech synthesis has proper intonation
-
-	document.getElementById('result').innerHTML = phrase + '<br />keys: ' + results.keys.join(', ') + "<br />";  
-
-	var utterThis = new SpeechSynthesisUtterance(phrase);
-	utterThis.lang = 'FR';
-	window.speechSynthesis.speak(utterThis);
-}
-
-function cancel() {
-	document.getElementById('result').innerHTML = 'cancelled!';
-}
-
 
 window.addEventListener('load', function(){ setTimeout(function(){ window.scrollTo(0,0); }, 100); }, true);
 

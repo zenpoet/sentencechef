@@ -5,6 +5,12 @@
 
 var reason_not_valid = "";
 
+function addNBSP(a) {
+	var re = / /g;
+	for (var i = 0; i < a.length; ++i)
+		a[i] = a[i].replace(re, "&nbsp;");
+}
+
 // declare all the verb stems that correspond to preference verb
 var preference_verbs = []
 preference_verbs.push("détest");
@@ -12,6 +18,7 @@ preference_verbs.push("aim");
 preference_verbs.push("ador");
 preference_verbs.push("préfér");
 preference_verbs.push("préfèr");
+preference_verbs.sort();
 
 // -------------------------------------------------------------
 // Add to the list of subject pronouns
@@ -20,11 +27,11 @@ subject_pronoun.push("Je");
 subject_pronoun.push("Tu");
 subject_pronoun.push("Il");
 subject_pronoun.push("Elle");
+subject_pronoun.push("On");
 subject_pronoun.push("Nous");
 subject_pronoun.push("Vous");
 subject_pronoun.push("Ils");
 subject_pronoun.push("Elles");
-subject_pronoun.push("On");
 
 // Add to the list of singular subjects
 var subject_singular = [];
@@ -58,6 +65,8 @@ subject_singular.push("Mon neveu");
 subject_singular.push("Le professeur");
 subject_singular.push("Un homme");
 subject_singular.push("La personne");
+subject_singular.sort();
+addNBSP(subject_singular);
 
 // Add to the list of plural subjects
 var subject_plural = [];
@@ -90,6 +99,8 @@ subject_plural.push("Les chefs");
 subject_plural.push("Les soldiers");
 subject_plural.push("Les animaux");
 subject_plural.push("Les gens");
+subject_plural.sort();
+addNBSP(subject_plural);
 
 // Add to the list of subjects and "et moi"
 var subject_plus_moi = [];
@@ -99,9 +110,11 @@ subject_plus_moi.push("Le professeur et moi");
 subject_plus_moi.push("Didier et moi");
 subject_plus_moi.push("Ma mère et moi");
 subject_plus_moi.push("Le docteur et moi");
-subject_plus_moi.push("les animaux et moi");
+subject_plus_moi.push("Les animaux et moi");
 subject_plus_moi.push("Pierre et moi");
 subject_plus_moi.push("Les villageois et moi");
+subject_plus_moi.sort();
+addNBSP(subject_plus_moi);
 
 // Add to the list of ER verb stem
 var verb_stem_er = [];
@@ -132,11 +145,13 @@ verb_stem_er.push("congel");
 verb_stem_er.push("congèl");
 verb_stem_er.push("préfér");
 verb_stem_er.push("préfèr");
+verb_stem_er.sort();
 
 // Add to the list of IR verb stem
 var verb_stem_ir = [];
 verb_stem_ir.push("chois");
 verb_stem_ir.push("fin");
+verb_stem_ir.sort();
 
 // Add to the list of RE verb stem
 var verb_stem_re = [];
@@ -145,22 +160,23 @@ verb_stem_re.push("rend");
 verb_stem_re.push("détrui");
 verb_stem_re.push("mord");
 verb_stem_re.push("perd");
+verb_stem_re.sort();
 
 // Add to the list of verb endings
 var verb_ending = [];
 verb_ending.push("e");
 verb_ending.push("es");
 verb_ending.push("is");
-verb_ending.push("ons");
-verb_ending.push("ez");
+verb_ending.push("s");
 verb_ending.push("ent");
 verb_ending.push("it");
+verb_ending.push("&nbsp;");
+verb_ending.push("ons");
+verb_ending.push("eons");
 verb_ending.push("issons");
+verb_ending.push("ez");
 verb_ending.push("issez");
 verb_ending.push("issent");
-verb_ending.push("s");
-verb_ending.push("");
-verb_ending.push("eons");
 
 // Add to the list of partitif
 var partitif = [];
@@ -174,6 +190,7 @@ partitif.push("de l'");
 partitif.push("des");
 partitif.push("les");
 partitif.push("l'");
+addNBSP(partitif);
 
 // Add to the list of masculine food
 var food_masculine = [];
@@ -181,9 +198,8 @@ food_masculine.push("poisson");
 food_masculine.push("bonbon");
 food_masculine.push("chocolat");
 food_masculine.push("couscous");
-food_masculine.push("pomme");
 food_masculine.push("fromage");
-food_masculine.push("sandwiche");
+food_masculine.push("sandwich");
 
 // Add to the list of feminine food
 var food_feminine = [];
@@ -193,7 +209,6 @@ food_feminine.push("quiche");
 food_feminine.push("pomme");
 food_feminine.push("pastèque");
 food_feminine.push("aubergine");
-food_feminine.push("fromage");
 food_feminine.push("grenade");
 food_feminine.push("banane");
 food_feminine.push("crêpe");
@@ -212,6 +227,7 @@ food_feminine.push("crème brûlée");
 food_feminine.push("myrtille");
 food_feminine.push("boulette de viande");
 food_feminine.push("fraise");
+addNBSP(food_feminine);
 
 var food_plural = [];
 food_plural.push("crabes");
@@ -220,17 +236,19 @@ food_plural.push("quiches");
 food_plural.push("pommes");
 food_plural.push("frites");
 food_plural.push("poissons");
-food_plural.push("pastéques");
+food_plural.push("pastèques");
 food_plural.push("brocolis");
 food_plural.push("aubergines");
+food_plural.sort();
+addNBSP(food_plural);
 
 var neg1 = [];
-neg1.push("");
+neg1.push("&nbsp;");
 neg1.push("ne");
 neg1.push("n'");
 
 var neg2 = [];
-neg2.push("");
+neg2.push("&nbsp;");
 neg2.push("pas");
 
 // this is a function that returns whether
@@ -328,17 +346,17 @@ function subjectVerbAgreement_RE(subject, verb_stem, verb_ending) {
     return true;
   } else if (subject == "Tu" && verb_ending == "s") {
     return true;
-  } else if (subject == "Il" && verb_ending == "") {
+  } else if (subject == "Il" && verb_ending == "&nbsp;") {
     return true;
-  } else if (subject == "Elle" && verb_ending == "") {
+  } else if (subject == "Elle" && verb_ending == "&nbsp;") {
     return true;
-  } else if (subject == "On" && verb_ending == "") {
+  } else if (subject == "On" && verb_ending == "&nbsp;") {
     return true;
   } else if (subject == "Nous" && verb_ending == "ons") {
     return true;
   } else if (subject == "Vous" && verb_ending == "ez") {
     return true;
-  } else if (isInList(subject, subject_singular) && verb_ending == "") {
+  } else if (isInList(subject, subject_singular) && verb_ending == "&nbsp;") {
     return true;
   } else if (isInList(subject, subject_plural) && verb_ending == "ent") {
     return true;
@@ -557,6 +575,90 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 	return isValid;
 }
 
+function slotifyArray(a) {
+	var n = {}
+	for (i = 0; i < a.length; ++i) {
+		n[i]=a[i];		
+	}
+	return n;
+}
+
+function openFrench() {
+	var subject_tmp = subject_pronoun;
+	subject_tmp = subject_tmp.concat(subject_singular);
+	subject_tmp = subject_tmp.concat(subject_plus_moi);
+	subject_tmp = subject_tmp.concat(subject_plural);
+	var subject = slotifyArray(subject_tmp);
+
+	var food_tmp = food_feminine;
+	food_tmp = food_tmp.concat(food_masculine);
+	food_tmp.sort();
+	food_tmp = food_tmp.concat(food_plural);
+	var food = slotifyArray(food_tmp);
+
+	var verb = verb_stem_er;
+	verb = verb.concat(verb_stem_ir);
+	verb = verb.concat(verb_stem_re);
+
+	SpinningWheel.addSlot(subject, '', 3);
+	SpinningWheel.addSlot(neg1, 'right', 2);
+	SpinningWheel.addSlot(verb, 'right', 3);
+	SpinningWheel.addSlot(verb_ending, 'left', 3);
+	SpinningWheel.addSlot(neg2,'left',2);
+	SpinningWheel.addSlot(partitif,'',4);
+	SpinningWheel.addSlot(food,'left',3);
+	
+	SpinningWheel.setCancelAction(cancel);
+	SpinningWheel.setDoneAction(done);
+	
+	SpinningWheel.open();
+}
+
+function done() {
+	var phrase;
+	var results = SpinningWheel.getSelectedValues();
+
+	var re = /&nbsp;/g;
+
+	var subject = results.values[0].replace(re,' ');
+	phrase = subject;             // subject
+
+	if (results.values[1] != '&nbsp;')            // neg1
+		phrase += ' ' + results.values[1];
+	else
+		phrase += ' ';
+	
+	phrase += ' ' + results.values[2];      // verb stem
+
+	phrase += results.values[3].replace(re, ' ');            // verb ending
+	if (results.values[4] != '&nbsp;')            // neg2
+		phrase += ' ' + results.values[4];
+	else
+		phrase += ' ';
+
+	var partitif = results.values[5].replace(re, ' ');
+	phrase += ' ' + partitif;      // partitif
+
+	var food = results.values[6].replace(re,' ');
+	phrase += ' ' + food;      // food
+
+	phrase += '.';      // so that speech synthesis has proper intonation
+
+//var str = 'boulette&nbsp;de&nbsp;viande';
+//var newstr = str.replace(re, ' ');
+//console.log(newstr);  // oranges are round, and oranges are juicy.
+
+	document.getElementById('result').innerHTML = phrase;  
+
+	var utterThis = new SpeechSynthesisUtterance(phrase);
+	utterThis.lang = 'FR';
+	window.speechSynthesis.speak(utterThis);
+}
+
+function cancel() {
+	document.getElementById('result').innerHTML = 'cancelled!';
+}
+
 // Let's figure out whether a sentence is valid 
 // by calling the function isValidSentence() and giving it 7 parameters
 //
@@ -616,3 +718,4 @@ console.log("===");
 console.log(isValidSentence("Nous", "", "aim", "ons", "", "le", "chocolat"));
 
 console.log(food_starts_with_vowel("haricots"));
+

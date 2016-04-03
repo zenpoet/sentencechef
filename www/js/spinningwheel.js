@@ -115,7 +115,7 @@ var SpinningWheel = {
 		div.id = 'sw-wrapper';
 		div.style.top = window.innerHeight + window.pageYOffset + 'px';		// Place the SW down the actual viewing screen
 		div.style.webkitTransitionProperty = '-webkit-transform';
-		div.innerHTML = '<div id="sw-header"><div id="sw-cancel">Cancel</' + 'div><div id="sw-done">Verify</' + 'div></' + 'div><div id="sw-slots-wrapper"><div id="sw-slots"></' + 'div></' + 'div><div id="sw-frame"></' + 'div>';
+		div.innerHTML = '<div id="sw-header">' + '<div id="sw-done">Verify</' + 'div></' + 'div><div id="sw-slots-wrapper"><div id="sw-slots"></' + 'div></' + 'div><div id="sw-frame"></' + 'div>';
 
 		document.body.appendChild(div);
 
@@ -164,7 +164,7 @@ var SpinningWheel = {
 		window.addEventListener('scroll', this, true);				// Reposition SW on page scroll
 
 		// Cancel/Done buttons events
-		document.getElementById('sw-cancel').addEventListener('touchstart', this, false);
+//		document.getElementById('sw-cancel').addEventListener('touchstart', this, false);
 		document.getElementById('sw-done').addEventListener('touchstart', this, false);
 
 		// Add scrolling to the slots
@@ -191,7 +191,7 @@ var SpinningWheel = {
 
 		this.swFrame.removeEventListener('touchstart', this, false);
 
-		document.getElementById('sw-cancel').removeEventListener('touchstart', this, false);
+//		document.getElementById('sw-cancel').removeEventListener('touchstart', this, false);
 		document.getElementById('sw-done').removeEventListener('touchstart', this, false);
 
 		document.removeEventListener('touchstart', this, false);
@@ -465,10 +465,10 @@ var SpinningWheel = {
 	tapUp: function (e) {
 		this.tapCancel(e);
 
-		if (e.currentTarget.id == 'sw-cancel') {
-			this.cancelAction();
-		} else {
+		if (e.currentTarget.id == 'sw-done') {
 			this.doneAction();
+		} else {
+			this.cancelAction();
 		}
 		
 //		this.close();

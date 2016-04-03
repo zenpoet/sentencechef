@@ -735,4 +735,6 @@ console.log("===");
 console.log(isValidSentence("On", "n'", "aim", "e", "pas", "le", "beurre"));
 console.log("===");
 console.log(isValidSentence("On", "", "aim", "e", "", "le", "beurre"));
+console.log("===");
+console.log(isValidSentence("Elle", "", "cherch", "e", "", "le", "beurre"));
 

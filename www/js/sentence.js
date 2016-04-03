@@ -10,7 +10,8 @@ var preference_verbs = []
 preference_verbs.push("détest");
 preference_verbs.push("aim");
 preference_verbs.push("ador");
-// ... add your own
+preference_verbs.push("préfér");
+preference_verbs.push("préfèr");
 
 // -------------------------------------------------------------
 // Add to the list of subject pronouns
@@ -129,6 +130,8 @@ verb_stem_er.push("chauff");
 verb_stem_er.push("prépar");
 verb_stem_er.push("congel");
 verb_stem_er.push("congèl");
+verb_stem_er.push("préfér");
+verb_stem_er.push("préfèr");
 
 // Add to the list of IR verb stem
 var verb_stem_ir = [];
@@ -241,6 +244,17 @@ function isInList(arr, element)
 }
 
 function subjectVerbAgreement_ER(subject, verb_stem, verb_ending) {
+  // check special case for préférer
+  if (verb_stem=='préfér') { 
+    // must be nous vous or equivalent
+	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi))
+      return false;
+  }
+  else if (verb_stem=='préfèr') {
+	if (subject == "Nous" || subject == "Vous" || isInList(subject, subject_plus_moi))
+      return false;
+  }
+
   if (subject == "Je" && verb_ending == "e") {
     return true;
   } else if (subject == "J'" && verb_ending == "e") {
@@ -488,9 +502,16 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 				}
 			}
 		}
-		else
+		else // sentence negative
 		{
-			// to do later
+			if (partitif != 'de' && partitif != "d'") {
+				return false;
+			}
+			else if (food_starts_with_vowel(food) && partitif == "d'") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}		
 

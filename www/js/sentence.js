@@ -422,9 +422,9 @@ function is_food_plural(food)
 	}
 }
 
-function food_starts_with_vowel(food)
+function starts_with_vowel(word)
 {
-	var first_letter = food[0];
+	var first_letter = word[0];
 	if (first_letter == "a" ||
 		first_letter == "e" ||
 		first_letter == "i" ||
@@ -472,7 +472,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 
 	if (isInList(preference_verbs, verb_stem))
 	{
-		if (food_starts_with_vowel(food) && partitif == "l'")
+		if (starts_with_vowel(food) && partitif == "l'")
 		{
 			return true;
 		}
@@ -504,7 +504,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 			}
 			else 
 			{
-				if (food_starts_with_vowel(food))
+				if (starts_with_vowel(food))
 				{
 					return (partitif == "de l'")
 				}
@@ -528,7 +528,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 			if (partitif != 'de' && partitif != "d'") {
 				return false;
 			}
-			else if (food_starts_with_vowel(food) && partitif == "d'") {
+			else if (starts_with_vowel(food) && partitif == "d'") {
 				return true;
 			} else {
 				return false;
@@ -539,13 +539,9 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 	return false;
 }
 
-// possible choices are: "", "n'", "ne"
-function is_sentence_positive(negation1)
+function is_sentence_positive(negation1, negation2)
 {
-	if (negation1=="")
-		return true;
-	else
-		return false;
+	return !(negation1=='ne' || negation1=="n'" || negation2=='pas');
 }
 
 function displaySentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) 
@@ -553,29 +549,50 @@ function displaySentence(subject, negation1, verb_stem, verb_ending, negation2, 
 	console.log(subject + " " + negation1 + " " + verb_stem + verb_ending + " " + negation2 + " " + partitif + " " + food);
 }
 
-function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) 
+function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food, reason) 
 {
 	var isValid = true;
-	var sentence_positive = is_sentence_positive(negation1);
-
-	// ne  pas
-	//  
-	if (!sentence_positive) {
-		if (negation2 == 'pas' && negation1=='') {
-			console.log("ne pas rule");
-			isValid = false;
-		}
-	}
+	var sentence_positive = is_sentence_positive(negation1, negation2);
 
 	if (subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending) != true)
 	{
 		console.log("subject does not agree with verb ending" + subject + verb_stem + verb_ending);
+		reason.push('subject');
+		reason.push('verb_ending');
 		isValid = false;
+		return false;
+	}
+
+	// ne  pas
+	if (!sentence_positive) {
+		if (negation2 == 'pas' && negation1=='') {
+			reason.push('negation1');
+			reason.push('negation2');
+			console.log(reason.toString());
+			isValid = false;
+			return false;
+		} else if (negation1 != '' && negation2 != 'pas') {
+			reason.push('negation1');
+			reason.push('negation2');
+			isValid = false;
+			console.log(reason.toString());
+			return false;
+		}
+		else if ( (negation1 == "n'" && !starts_with_vowel(verb_stem)) ||
+			(negation1 == "ne" && starts_with_vowel(verb_stem)) ) {
+			reason.push('negation1');
+			reason.push('verb_vowel');
+			isValid = false;
+			console.log(reason.toString());
+			return false;
+		}
 	}
 
 	if (partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positive) != true)
 	{
 		console.log("partitif does not agree with verb preference");
+		reason.push('verb_stem');
+		reason.push('partitif');
 		isValid = false;
 	}
 
@@ -583,6 +600,7 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		console.log("VALID: ");
 	else
 		console.log("INVALID: ");
+
 	displaySentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food);
 	return isValid;
 }
@@ -627,44 +645,96 @@ function openFrench() {
 }
 
 function done() {
-	var phrase;
+	var phrase = '';
 	var results = SpinningWheel.getSelectedValues();
 
 	var re = /&nbsp;/g;
 
 	var subject = results.values[0].replace(re,' ');
-	phrase = subject;             // subject
-
 	var neg1 = results.values[1].replace(re,'');
-	if (neg1 != '')
-		phrase += ' ' + neg1;
-
 	var verb_stem = results.values[2];
-	phrase += ' ' + verb_stem;      // verb stem
-
 	var verb_ending = results.values[3].replace(re, '');
-	if (verb_ending != '')
-		phrase += verb_ending;
-
 	var neg2 = results.values[4].replace(re,'');
-	if (neg2 != '')
-		phrase += ' ' + neg2;
-
 	var partitif = results.values[5].replace(re, ' ');
-	phrase += ' ' + partitif;      // partitif
-
 	var food = results.values[6].replace(re,' ');
+
+	var reason = [];
+	var valid_sentence = isValidSentence(subject, neg1, verb_stem, verb_ending, neg2, partitif, food, reason);
+
+	if (!valid_sentence && isInList(reason,'subject'))
+		phrase += '<span class="mistake">'; 
+	phrase += subject;             // subject
+	if (!valid_sentence && isInList(reason,'subject'))
+		phrase += '</span>';
+
+	if (neg1 != '')
+		phrase += ' ';
+	if (!valid_sentence && isInList(reason,'negation1'))
+		phrase += '<span class="mistake">'; 
+   	if (neg1 += '')
+		phrase += neg1;
+	else if (!valid_sentence && isInList(reason,'negation1'))
+		phrase += '&nbsp;';
+	if (!valid_sentence && isInList(reason,'negation1'))
+		phrase += '</span>';
+
+	if (!valid_sentence && isInList(reason,'verb_vowel')) {
+		phrase += '<span class="mistake">';
+	}
+	phrase += '&nbsp;';      // verb stem
+
+	if (!valid_sentence && isInList(reason,'verb_vowel')) {
+		phrase += verb_stem.slice(0,1);
+	}
+	else
+		phrase += verb_stem;      // verb stem
+
+	if (!valid_sentence && isInList(reason,'verb_stem'))
+		phrase += '</span>';
+	
+	if (!valid_sentence && isInList(reason,'verb_vowel')) {
+		phrase += '</span>' + verb_stem.slice(1);
+	}
+
+	if (verb_ending != '') {
+		if (!valid_sentence && isInList(reason,'verb_ending'))
+			phrase += '<span class="mistake">'; 
+		phrase += verb_ending;
+		if (!valid_sentence && isInList(reason,'verb_ending'))
+			phrase += '</span>';
+	}
+
+	if (neg2 != '')
+		phrase += '&nbsp;';
+	if (!valid_sentence && isInList(reason,'negation2')) {
+		phrase += '&nbsp;<span class="mistake">'; 
+	}
+	if (neg2 != '')
+    	phrase += neg2;
+	else if (!valid_sentence && isInList(reason,'negation2'))
+		phrase += '&nbsp;&nbsp;';
+	if (!valid_sentence && isInList(reason,'negation2'))
+		phrase += '</span>';
+
+	phrase += ' ';
+	if (!valid_sentence && isInList(reason,'partitif'))
+		phrase += '<span class="mistake">'; 
+    phrase += partitif;      // partitif
+	if (!valid_sentence && isInList(reason,'partitif'))
+		phrase += '</span>';
+
 	phrase += ' ' + food;      // food
 
 	phrase += '.';      // so that speech synthesis has proper intonation
 
-	if (isValidSentence(subject, neg1, verb_stem, verb_ending, neg2, partitif, food)) {
+
+	if (valid_sentence) {
 		var utterThis = new SpeechSynthesisUtterance(phrase);
 		utterThis.lang = 'FR';
 		window.speechSynthesis.speak(utterThis);
 		document.getElementById('result').innerHTML = 'Bravo: ' + phrase;  
 	} else {
-		document.getElementById('result').innerHTML = phrase;  
+		document.getElementById('result').innerHTML = '<font color=red>Aïe:</font> ' + phrase + '<br />' + reason.toString();  
 	}
 }
 
@@ -737,4 +807,6 @@ console.log("===");
 console.log(isValidSentence("On", "", "aim", "e", "", "le", "beurre"));
 console.log("===");
 console.log(isValidSentence("Elle", "", "cherch", "e", "", "le", "beurre"));
+console.log("===");
+console.log(isValidSentence("Elle", "n'", "cherch", "e", "pas", "de", "bonbon"));
 

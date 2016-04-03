@@ -255,9 +255,10 @@ neg2.push("pas");
 
 // this is a function that returns whether
 // something is part of an array
-function isInList(arr, element)
+function isInList(element, arr)
 {
-	if (arr.indexOf(element) >= 0)
+	var re = /&nbsp;/g;
+	if (arr.indexOf(element) >= 0 || arr.indexOf(element.replace(re, ' ')) >= 0)
 		return true;
 	else
 		return false;
@@ -301,7 +302,7 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending) {
     return true;
   } else if (isInList(subject, subject_plus_moi) && verb_ending == "ons") {
     return true;
-  } else if ((subject == "Nous"||isInList(subject_plus_moi, subject)) && verb_stem == "mang" && verb_ending == "eons") { 
+  } else if ((subject == "Nous"||isInList(subject, subject_plus_moi)) && verb_stem == "mang" && verb_ending == "eons") { 
 		return true;
   } else {
     reason_not_valid="Invalid verb conjugation: the verb ending should agree with its subject";
@@ -373,7 +374,7 @@ function subjectVerbAgreement_RE(subject, verb_stem, verb_ending) {
 
 function is_ER_verb(verb_stem)
 {
-	if (isInList(verb_stem_er, verb_stem))
+	if (isInList(verb_stem, verb_stem_er))
 		return true;
 	else
 		return false;
@@ -381,7 +382,7 @@ function is_ER_verb(verb_stem)
 
 function is_IR_verb(verb_stem)
 {
-	if (isInList(verb_stem_ir, verb_stem))
+	if (isInList(verb_stem, verb_stem_ir))
 		return true;
 	else
 		return false;
@@ -389,7 +390,7 @@ function is_IR_verb(verb_stem)
 
 function is_RE_verb(verb_stem)
 {
-	if (isInList(verb_stem_re, verb_stem))
+	if (isInList(verb_stem,verb_stem_re))
 		return true;
 	else
 		return false;
@@ -412,7 +413,7 @@ function subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending)
 
 function is_food_plural(food)
 {
-	if (isInList(food_plural, food))
+	if (isInList(food, food_plural))
 	{
 		return true;
 	}
@@ -443,7 +444,7 @@ function starts_with_vowel(word)
 
 function is_food_masculine(food)
 {
-	if (isInList(food_masculine, food))
+	if (isInList(food,food_masculine))
 	{
 		return true;
 	}
@@ -455,7 +456,7 @@ function is_food_masculine(food)
 
 function is_food_feminine(food)
 {
-	if (isInList(food_feminine, food))
+	if (isInList(food,food_feminine))
 	{
 		return true;
 	}
@@ -470,7 +471,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 {
 //	console.log("verb_stem: " + verb_stem + " partitif: " + partitif + " food: " + food);
 
-	if (isInList(preference_verbs, verb_stem))
+	if (isInList(verb_stem, preference_verbs))
 	{
 		if (starts_with_vowel(food) && partitif == "l'")
 		{
@@ -539,6 +540,22 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 	return false;
 }
 
+function foodPartitifAgreement(partitif, food)
+{
+	if (partitif == 'de') return true;
+	else if ((partitif == 'des' || partitif == 'les') && !isInList(food, food_plural))
+		return false;
+	else if (isInList(food, food_plural) && (partitif != 'des' || partitif != 'les' || partitif != 'de'))
+		return false;
+	else if (isInList(food, food_feminine) && !(
+		partitif == 'la' || partitif == 'de la' || partitif == "d'" || partitif == "de l'" || partitif == "l'"))
+		return false;
+	else if (isInList(food, food_masculine) && !( partitif == "du" || partitif == "le" || partitif == "d'" || partitif == "de l'" || partitif == "l'" ))
+		return false;
+	else
+		return true;
+}
+
 function is_sentence_positive(negation1, negation2)
 {
 	return !(negation1=='ne' || negation1=="n'" || negation2=='pas');
@@ -553,6 +570,8 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 {
 	var isValid = true;
 	var sentence_positive = is_sentence_positive(negation1, negation2);
+
+	if (reason == undefined) reason = [];
 
 	if (subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending) != true)
 	{
@@ -581,11 +600,26 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		else if ( (negation1 == "n'" && !starts_with_vowel(verb_stem)) ||
 			(negation1 == "ne" && starts_with_vowel(verb_stem)) ) {
 			reason.push('negation1');
-			reason.push('verb_vowel');
+			reason.push('verb_vowel_agree');
+			// ne aime
+			// n' cherche
+			if (starts_with_vowel(verb_stem))
+				reason.push('verb_start_vowel');
+			else
+				reason.push('verb_start_consonant');
 			isValid = false;
 			console.log(reason.toString());
 			return false;
 		}
+	}
+
+	// check subject/food gender
+	if (!foodPartitifAgreement(partitif, food))
+	{
+		reason.push('partitif');
+		reason.push('food');
+		reason.push('food_partitif_agreement');
+		return false;
 	}
 
 	if (partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positive) != true)
@@ -594,6 +628,7 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		reason.push('verb_stem');
 		reason.push('partitif');
 		isValid = false;
+		return false;
 	}
 
 	if (isValid)
@@ -651,90 +686,119 @@ function done() {
 	var re = /&nbsp;/g;
 
 	var subject = results.values[0].replace(re,' ');
-	var neg1 = results.values[1].replace(re,'');
-	var verb_stem = results.values[2];
-	var verb_ending = results.values[3].replace(re, '');
-	var neg2 = results.values[4].replace(re,'');
+	var neg1 = results.values[1].replace(re,' ');
+	var verb_stem = results.values[2].replace(re,' ');
+	var verb_ending = results.values[3].replace(re, ' ');
+	var neg2 = results.values[4].replace(re,' ');
 	var partitif = results.values[5].replace(re, ' ');
 	var food = results.values[6].replace(re,' ');
 
 	var reason = [];
 	var valid_sentence = isValidSentence(subject, neg1, verb_stem, verb_ending, neg2, partitif, food, reason);
 
-	if (!valid_sentence && isInList(reason,'subject'))
+	if (!valid_sentence && isInList('subject', reason))
 		phrase += '<span class="mistake">'; 
 	phrase += subject;             // subject
-	if (!valid_sentence && isInList(reason,'subject'))
+	if (!valid_sentence && isInList('subject', reason))
 		phrase += '</span>';
 
 	if (neg1 != '')
 		phrase += ' ';
-	if (!valid_sentence && isInList(reason,'negation1'))
+	if (!valid_sentence && isInList('negation1', reason)) {
+		if (neg1 == '')
+			phrase += '&nbsp;';
 		phrase += '<span class="mistake">'; 
-   	if (neg1 += '')
+	}
+   	if (neg1 != '')
 		phrase += neg1;
-	else if (!valid_sentence && isInList(reason,'negation1'))
-		phrase += '&nbsp;';
-	if (!valid_sentence && isInList(reason,'negation1'))
+	else if (!valid_sentence && isInList('negation1', reason))
+		phrase += '&nbsp;&nbsp;';
+	if (!valid_sentence && isInList('negation1', reason))
 		phrase += '</span>';
 
-	if (!valid_sentence && isInList(reason,'verb_vowel')) {
+	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
 		phrase += '<span class="mistake">';
 	}
 	phrase += '&nbsp;';      // verb stem
 
-	if (!valid_sentence && isInList(reason,'verb_vowel')) {
+	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
 		phrase += verb_stem.slice(0,1);
 	}
 	else
 		phrase += verb_stem;      // verb stem
 
-	if (!valid_sentence && isInList(reason,'verb_stem'))
+	if (!valid_sentence && isInList('verb_stem', reason))
 		phrase += '</span>';
 	
-	if (!valid_sentence && isInList(reason,'verb_vowel')) {
+	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
 		phrase += '</span>' + verb_stem.slice(1);
 	}
 
 	if (verb_ending != '') {
-		if (!valid_sentence && isInList(reason,'verb_ending'))
+		if (!valid_sentence && isInList('verb_ending', reason))
 			phrase += '<span class="mistake">'; 
 		phrase += verb_ending;
-		if (!valid_sentence && isInList(reason,'verb_ending'))
+		if (!valid_sentence && isInList('verb_ending', reason))
 			phrase += '</span>';
 	}
 
 	if (neg2 != '')
 		phrase += '&nbsp;';
-	if (!valid_sentence && isInList(reason,'negation2')) {
-		phrase += '&nbsp;<span class="mistake">'; 
+	if (!valid_sentence && isInList('negation2', reason)) {
+		if (neg2 == '')
+			phrase += '&nbsp;';
+		phrase += '<span class="mistake">'; 
 	}
 	if (neg2 != '')
     	phrase += neg2;
-	else if (!valid_sentence && isInList(reason,'negation2'))
+	else if (!valid_sentence && isInList('negation2', reason))
 		phrase += '&nbsp;&nbsp;';
-	if (!valid_sentence && isInList(reason,'negation2'))
+	if (!valid_sentence && isInList('negation2', reason))
 		phrase += '</span>';
 
 	phrase += ' ';
-	if (!valid_sentence && isInList(reason,'partitif'))
+	if (!valid_sentence && isInList('partitif', reason))
 		phrase += '<span class="mistake">'; 
     phrase += partitif;      // partitif
-	if (!valid_sentence && isInList(reason,'partitif'))
+	if (!valid_sentence && isInList('partitif', reason))
 		phrase += '</span>';
 
-	phrase += ' ' + food;      // food
+	phrase += ' ';
+	if (!valid_sentence && isInList('food', reason))
+		phrase += '<span class="mistake">'; 
+    phrase += food;      // food
+	if (!valid_sentence && isInList('food', reason))
+		phrase += '</span>';
 
 	phrase += '.';      // so that speech synthesis has proper intonation
 
 
 	if (valid_sentence) {
+		phrase = phrase.replace(re, ' ');
+		document.getElementById('result').innerHTML = 'Bravo: ' + phrase;  
 		var utterThis = new SpeechSynthesisUtterance(phrase);
 		utterThis.lang = 'FR';
 		window.speechSynthesis.speak(utterThis);
-		document.getElementById('result').innerHTML = 'Bravo: ' + phrase;  
 	} else {
-		document.getElementById('result').innerHTML = '<font color=red>Aïe:</font> ' + phrase + '<br />' + reason.toString();  
+		var hint = '';
+		if (isInList('subject', reason) && isInList(subject, 'verb_ending'))
+			hint = '<span class="hint">conjugate your verb</span>';
+		else if (isInList('negation1', reason) && isInList('verb_vowel_agree', reason))
+		{
+			if (isInList('verb_start_vowel', reason))
+				hint = '<span class="hint">watch your negation when verb starts with vowel</span>';
+			else if (isInList('verb_start_consonant', reason))
+				hint = '<span class="hint">watch your negation when verb starts with consonant</span>';
+			else
+				hint = '<span class="hint">watch the negation and the first letter of the verb</span>';
+		}
+		else if (isInList('negation1', reason) && isInList('negation2', reason))
+				hint = '<span class="hint">what are you missing?</span>';
+		else if (isInList('food_partitif_agreement', reason))
+				hint = '<span class="hint">masculine, feminine, or plural?</span>';
+		else
+			hint = reason.toString();
+		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
 	}
 }
 

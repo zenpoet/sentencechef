@@ -141,7 +141,6 @@ verb_stem_er.push("mélang");
 verb_stem_er.push("vol");
 verb_stem_er.push("chauff");
 verb_stem_er.push("prépar");
-verb_stem_er.push("congel");
 verb_stem_er.push("congèl");
 verb_stem_er.push("congél");
 verb_stem_er.push("préfér");

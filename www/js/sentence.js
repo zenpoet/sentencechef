@@ -195,11 +195,15 @@ addNBSP(partitif);
 // Add to the list of masculine food
 var food_masculine = [];
 food_masculine.push("poisson");
+food_masculine.push("beurre");
 food_masculine.push("bonbon");
 food_masculine.push("chocolat");
 food_masculine.push("couscous");
 food_masculine.push("fromage");
 food_masculine.push("sandwich");
+food_masculine.push("légume");
+food_masculine.push("crabe");
+food_masculine.sort();
 
 // Add to the list of feminine food
 var food_feminine = [];
@@ -217,9 +221,6 @@ food_feminine.push("salade");
 food_feminine.push("glace");
 food_feminine.push("saucisse");
 food_feminine.push("pancake");
-food_feminine.push("légume");
-food_feminine.push("crabe");
-food_feminine.push("beurre");
 food_feminine.push("soupe");
 food_feminine.push("crevette");
 food_feminine.push("framboise");
@@ -227,6 +228,7 @@ food_feminine.push("crème brûlée");
 food_feminine.push("myrtille");
 food_feminine.push("boulette de viande");
 food_feminine.push("fraise");
+food_feminine.sort();
 addNBSP(food_feminine);
 
 var food_plural = [];
@@ -346,17 +348,17 @@ function subjectVerbAgreement_RE(subject, verb_stem, verb_ending) {
     return true;
   } else if (subject == "Tu" && verb_ending == "s") {
     return true;
-  } else if (subject == "Il" && verb_ending == "&nbsp;") {
+  } else if (subject == "Il" && verb_ending == "") {
     return true;
-  } else if (subject == "Elle" && verb_ending == "&nbsp;") {
+  } else if (subject == "Elle" && verb_ending == "") {
     return true;
-  } else if (subject == "On" && verb_ending == "&nbsp;") {
+  } else if (subject == "On" && verb_ending == "") {
     return true;
   } else if (subject == "Nous" && verb_ending == "ons") {
     return true;
   } else if (subject == "Vous" && verb_ending == "ez") {
     return true;
-  } else if (isInList(subject, subject_singular) && verb_ending == "&nbsp;") {
+  } else if (isInList(subject, subject_singular) && verb_ending == "") {
     return true;
   } else if (isInList(subject, subject_plural) && verb_ending == "ent") {
     return true;
@@ -547,13 +549,22 @@ function is_sentence_positive(negation1)
 
 function displaySentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) 
 {
-	console.log(subject + " " + verb_stem + verb_ending + " " + partitif + " " + food);
+	console.log(subject + " " + negation1 + " " + verb_stem + verb_ending + " " + negation2 + " " + partitif + " " + food);
 }
 
 function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) 
 {
 	var isValid = true;
 	var sentence_positive = is_sentence_positive(negation1);
+
+	// ne  pas
+	//  
+	if (!sentence_positive) {
+		if (negation2 == 'pas' && negation1=='') {
+			console.log("ne pas rule");
+			isValid = false;
+		}
+	}
 
 	if (subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending) != true)
 	{
@@ -623,18 +634,20 @@ function done() {
 	var subject = results.values[0].replace(re,' ');
 	phrase = subject;             // subject
 
-	if (results.values[1] != '&nbsp;')            // neg1
-		phrase += ' ' + results.values[1];
-	else
-		phrase += ' ';
-	
-	phrase += ' ' + results.values[2];      // verb stem
+	var neg1 = results.values[1].replace(re,'');
+	if (neg1 != '')
+		phrase += ' ' + neg1;
 
-	phrase += results.values[3].replace(re, ' ');            // verb ending
-	if (results.values[4] != '&nbsp;')            // neg2
-		phrase += ' ' + results.values[4];
-	else
-		phrase += ' ';
+	var verb_stem = results.values[2];
+	phrase += ' ' + verb_stem;      // verb stem
+
+	var verb_ending = results.values[3].replace(re, '');
+	if (verb_ending != '')
+		phrase += verb_ending;
+
+	var neg2 = results.values[4].replace(re,'');
+	if (neg2 != '')
+		phrase += ' ' + neg2;
 
 	var partitif = results.values[5].replace(re, ' ');
 	phrase += ' ' + partitif;      // partitif
@@ -644,15 +657,14 @@ function done() {
 
 	phrase += '.';      // so that speech synthesis has proper intonation
 
-//var str = 'boulette&nbsp;de&nbsp;viande';
-//var newstr = str.replace(re, ' ');
-//console.log(newstr);  // oranges are round, and oranges are juicy.
-
-	document.getElementById('result').innerHTML = phrase;  
-
-	var utterThis = new SpeechSynthesisUtterance(phrase);
-	utterThis.lang = 'FR';
-	window.speechSynthesis.speak(utterThis);
+	if (isValidSentence(subject, neg1, verb_stem, verb_ending, neg2, partitif, food)) {
+		var utterThis = new SpeechSynthesisUtterance(phrase);
+		utterThis.lang = 'FR';
+		window.speechSynthesis.speak(utterThis);
+		document.getElementById('result').innerHTML = 'Bravo: ' + phrase;  
+	} else {
+		document.getElementById('result').innerHTML = phrase;  
+	}
 }
 
 function cancel() {
@@ -716,6 +728,6 @@ console.log("===");
 console.log(isValidSentence("Nous", "", "aim", "ons", "", "la", "chocolat"));
 console.log("===");
 console.log(isValidSentence("Nous", "", "aim", "ons", "", "le", "chocolat"));
-
-console.log(food_starts_with_vowel("haricots"));
+console.log("===");
+console.log(isValidSentence("Nous", "n'", "aim", "ons", "pas", "le", "beurre"));
 

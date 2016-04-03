@@ -594,13 +594,13 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 
 	// ne  pas
 	if (!sentence_positive) {
-		if (negation2 == 'pas' && negation1=='') {
+		if (negation2=='pas' && (!isInList(negation1, ["ne", "n'"]))) {
 			reason.push('negation1');
 			reason.push('negation2');
 			console.log(reason.toString());
 			isValid = false;
 			return false;
-		} else if (negation1 != '' && negation2 != 'pas') {
+		} else if (isInList(negation1, ["ne", "n'"]) && negation2 != 'pas') {
 			reason.push('negation1');
 			reason.push('negation2');
 			isValid = false;
@@ -702,10 +702,10 @@ function done() {
 	var re = /&nbsp;/g;
 
 	var subject = results.values[0].replace(re,' ');
-	var neg1 = results.values[1].replace(re,' ');
+	var neg1 = results.values[1].replace(re,'');
 	var verb_stem = results.values[2].replace(re,' ');
 	var verb_ending = results.values[3].replace(re, ' ');
-	var neg2 = results.values[4].replace(re,' ');
+	var neg2 = results.values[4].replace(re,'');
 	var partitif = results.values[5].replace(re, ' ');
 	var food = results.values[6].replace(re,' ');
 
@@ -779,8 +779,18 @@ function done() {
 	if (!valid_sentence && isInList('partitif', reason))
 		phrase += '</span>';
 
-	if (!starts_with_vowel(food))
-		phrase += ' ';
+	if (valid_sentence && starts_with_vowel(food)) 
+		phrase += ''; 
+	else if (valid_sentence && (!starts_with_vowel(food))) {
+		phrase += ' '; 
+	}
+	else if (!isInList('food_partitif_liaison', reason)) {
+		phrase += ' '; 
+	}
+	else if (!starts_with_vowel(food)) {
+		phrase += ' '; 
+	}
+
 	if (!valid_sentence && isInList('food', reason))
 		phrase += '<span class="mistake">'; 
     phrase += food;      // food
@@ -798,8 +808,8 @@ function done() {
 		window.speechSynthesis.speak(utterThis);
 	} else {
 		var hint = '';
-		if (isInList('subject', reason) && isInList(subject, 'verb_ending'))
-			hint = '<span class="hint">conjugate your verb</span>';
+		if (isInList('subject', reason) && isInList('verb_ending', reason))
+			hint = '<span class="hint">please conjugate your verb</span>';
 		else if (isInList('negation1', reason) && isInList('verb_vowel_agree', reason))
 		{
 			if (isInList('verb_start_vowel', reason))
@@ -891,7 +901,6 @@ console.log(isValidSentence("On", "", "aim", "e", "", "le", "beurre"));
 console.log("===");
 console.log(isValidSentence("Elle", "", "cherch", "e", "", "le", "beurre"));
 console.log("===");
-console.log(isValidSentence("Elle", "n'", "cherch", "e", "pas", "de", "bonbon"));
-console.log("===");
-console.log(isValidSentence("Elle", "", "cherch", "e", "", "de la", "boulette de viande"));
+console.log(isValidSentence("Elle", "", "cherch", "e", "pas", "de", "bonbon"));
+console.log(isValidSentence("Elle", "&nbsp;", "cherch", "e", "pas", "de", "bonbon"));
 

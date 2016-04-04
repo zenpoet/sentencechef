@@ -639,6 +639,11 @@ function subjectVerbApostrophe(subject, negation1, verb_stem, reason) {
 		reason.push('subject_verb_apostrophe2');
 		return false;
 	}
+	else if (subject == "J'" && negation1) {
+		reason.push('subject_verb_apostrophe3');
+		reason.push('negation1');
+		return false;
+	}
 	else
 		return true;
 }
@@ -897,6 +902,9 @@ function done() {
 		}
 		else if (isInList('subject_verb_apostrophe2', reason)) {
 			hint = '<span class="hint">verb should start with a vowel</span>';
+		}
+		else if (isInList('subject_verb_apostrophe3', reason)) {
+			hint = '<span class="hint">sentence should start with Je</span>';
 		}
 		else if (isInList('negation1', reason) && isInList('verb_vowel_agree', reason)) {
 			if (isInList('verb_start_vowel', reason))

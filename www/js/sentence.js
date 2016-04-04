@@ -1,9 +1,9 @@
 
 /*
  * Let's declare various lists
+ *
+ * @todo, FIXME:   jette, jetons
 */
-
-var reason_not_valid = "";
 
 var score = 0;
 var already_seen = [];
@@ -26,6 +26,7 @@ preference_verbs.sort();
 // -------------------------------------------------------------
 // Add to the list of subject pronouns
 var subject_pronoun = [];
+subject_pronoun.push("J'");
 subject_pronoun.push("Je");
 subject_pronoun.push("Tu");
 subject_pronoun.push("Il");
@@ -135,8 +136,8 @@ verb_stem_er.push("préfér");
 verb_stem_er.push("préfèr");
 verb_stem_er.push("mâch");
 verb_stem_er.push("cultiv");
-verb_stem_er.push("jett");
 verb_stem_er.push("jet");
+verb_stem_er.push("jett");
 verb_stem_er.push("laiss");
 verb_stem_er.push("coup");
 verb_stem_er.push("port");
@@ -146,8 +147,6 @@ verb_stem_er.push("chauff");
 verb_stem_er.push("prépar");
 verb_stem_er.push("congèl");
 verb_stem_er.push("congél");
-verb_stem_er.push("préfér");
-verb_stem_er.push("préfèr");
 verb_stem_er.sort();
 
 // Add to the list of IR verb stem
@@ -289,9 +288,7 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
 	}
   }
 
-  if (subject == "Je" && verb_ending == "e") {
-    return true;
-  } else if (subject == "J'" && verb_ending == "e") {
+  if (isInList(subject, ["Je", "J'"]) && verb_ending == "e") {
     return true;
   } else if (subject == "Tu" && verb_ending == "es") {
     return true;
@@ -318,7 +315,6 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
   } else if ((subject == "Nous"||isInList(subject, subject_plus_moi)) && verb_stem == "mang" && verb_ending == "eons") { 
 		return true;
   } else {
-    reason_not_valid="Invalid verb conjugation: the verb ending should agree with its subject";
     return false;
   }
 }
@@ -611,6 +607,19 @@ function displaySentence(subject, negation1, verb_stem, verb_ending, negation2, 
 	console.log(subject + " " + negation1 + " " + verb_stem + verb_ending + " " + negation2 + " " + partitif + " " + food);
 }
 
+function subjectVerbApostrophe(subject, negation1, verb_stem, reason) {
+	if (subject == 'Je' && !negation1 && starts_with_vowel(verb_stem)) {
+		reason.push('subject_verb_apostrophe1');
+		return false;
+	}
+	else if (subject == "J'" && !negation1 && !starts_with_vowel(verb_stem)) {
+		reason.push('subject_verb_apostrophe2');
+		return false;
+	}
+	else
+		return true;
+}
+
 function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food, reason) 
 {
 	var isValid = true;
@@ -618,8 +627,14 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 
 	if (reason == undefined) reason = [];
 
-	if (subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending, reason) != true)
-	{
+	if (!subjectVerbApostrophe(subject, negation1, verb_stem, reason)) {
+		reason.push('subject');
+		reason.push('verb_stem');
+		isValid = false;
+		return false;
+	}
+
+	if (subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending, reason) != true) {
 		console.log("subject does not agree with verb ending" + subject + verb_stem + verb_ending);
 		reason.push('subject');
 		reason.push('verb_ending');
@@ -709,10 +724,10 @@ function openFrench() {
 	verb = verb.concat(verb_stem_re);
 
 	SpinningWheel.addSlot(subject, '', 3);
-	SpinningWheel.addSlot(neg1, 'right', 2);
+	SpinningWheel.addSlot(neg1, 'right', 0);
 	SpinningWheel.addSlot(verb, 'right', 3);
 	SpinningWheel.addSlot(verb_ending, 'left', 3);
-	SpinningWheel.addSlot(neg2,'left',2);
+	SpinningWheel.addSlot(neg2,'left',0);
 	SpinningWheel.addSlot(partitif,'',4);
 	SpinningWheel.addSlot(food,'left',3);
 	
@@ -845,8 +860,13 @@ function done() {
 		var hint = '';
 		if (isInList('subject', reason) && isInList('verb_ending', reason))
 			hint = '<span class="hint">please conjugate your verb</span>';
-		else if (isInList('negation1', reason) && isInList('verb_vowel_agree', reason))
-		{
+		else if (isInList('subject_verb_apostrophe1', reason)) {
+			hint = '<span class="hint">verb starts with vowel</span>';
+		}
+		else if (isInList('subject_verb_apostrophe2', reason)) {
+			hint = '<span class="hint">verb should start with a vowel</span>';
+		}
+		else if (isInList('negation1', reason) && isInList('verb_vowel_agree', reason)) {
 			if (isInList('verb_start_vowel', reason))
 				hint = '<span class="hint">watch your negation when verb starts with vowel</span>';
 			else if (isInList('verb_start_consonant', reason))
@@ -887,7 +907,7 @@ function assertValid(subject, negation1, verb_stem, verb_ending, negation2, part
 function assertInvalid(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) {
 	reason = []
 	console.log(' ');
-	if (isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food,reason)) {
+	if (isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food, reason)) {
 		displaySentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food);
 		console.log('assertion failed: ' + reason.toString());
 	}
@@ -948,3 +968,7 @@ assertValid("On", "", "aim", "e", "", "le", "beurre");
 assertValid("Ma famille et moi", "", "aim", "ons", "", "le", "beurre");
 if (!isInList("Ma famille et moi", subject_plus_moi))
 	console.log("Yo, something is wrong: " + subject_plus_moi.toString());
+assertInvalid("Ma famille et moi", "", "aim", "ent", "", "le", "beurre");
+assertInvalid("Je", "", "ador", "e", "", "le", "beurre");
+assertValid("J'", "", "ador", "e", "", "le", "beurre");
+assertValid("Il", "", "cherch", "e", "", "des", "quiches");

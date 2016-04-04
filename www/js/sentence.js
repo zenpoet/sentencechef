@@ -794,7 +794,9 @@ function done() {
 	if (!valid_sentence && isInList('subject', reason))
 		phrase += '</span>';
 
-	if (neg1 != '')
+	if (neg1 != '' && subject != "J'")
+		phrase += ' ';
+	else if (subject == "J'" && neg1)
 		phrase += ' ';
 	if (!valid_sentence && isInList('negation1', reason)) {
 		if (neg1 == '')
@@ -811,7 +813,16 @@ function done() {
 	if (!valid_sentence && (isInList('verb_vowel_agree', reason) || isInList('special_case_verb_accent', reason))) {
 		phrase += '<span class="mistake">';
 	}
-	phrase += '&nbsp;';      // verb stem
+
+	if (valid_sentence)
+		if (subject == "J'" && starts_with_vowel(verb_stem)) {
+			phrase += '';
+		}
+		else {
+		phrase += '&nbsp;'; 
+	}
+	else
+		phrase += '&nbsp;'; 
 
 	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
 		phrase += verb_stem.slice(0,1);

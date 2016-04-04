@@ -159,7 +159,7 @@ verb_stem_ir.sort();
 var verb_stem_re = [];
 verb_stem_re.push("vend");
 verb_stem_re.push("rend");
-verb_stem_re.push("détrui");
+//verb_stem_re.push("détrui");
 verb_stem_re.push("mord");
 verb_stem_re.push("perd");
 verb_stem_re.sort();
@@ -453,8 +453,7 @@ function is_food_plural(food)
 	}
 }
 
-function starts_with_vowel(word)
-{
+function starts_with_vowel(word) {
 	var first_letter = word[0];
 	if (first_letter == "a" ||
 		first_letter == "e" ||
@@ -470,6 +469,10 @@ function starts_with_vowel(word)
 	{
 		return false;
 	}
+}
+
+function ends_with_apostrophe(word) {
+	return word[word.length-1] == "'";
 }
 
 function is_food_masculine(food)
@@ -890,7 +893,7 @@ function done() {
 	if (!valid_sentence && isInList('partitif', reason))
 		phrase += '</span>';
 
-	if (valid_sentence && starts_with_vowel(food)) 
+	if (valid_sentence && starts_with_vowel(food) && ends_with_apostrophe(neg2)) 
 		phrase += ''; 
 	else if (valid_sentence && (!starts_with_vowel(food))) {
 		phrase += ' '; 

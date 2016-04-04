@@ -25,19 +25,39 @@ window.addEventListener('load', function(){ setTimeout(function(){ window.scroll
 	.bravo { color:cyan;}
 	#result { margin:2px; padding:4px; font-size:16px; } 
 
+	/* #### iPhone 4+ Portrait or Landscape #### */
+	@media screen and (min-device-width: 320px) and (-webkit-min-device-pixel-ratio: 2){
+			  /* some CSS here */
+	.hint { color:red; font-size:12px;}
+	#result { margin:2px; padding:4px; font-size:12px; } 
+#sw-slots li {
+	padding:0 4px; 
+	font:bold 14px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
+}
+	  }
+
+	  /* #### iPhone 5 Portrait or Landscape #### */
+	  @media (device-height: 568px) and (device-width: 320px) and (-webkit-min-device-pixel-ratio: 2){
+	.hint { color:red; font-size:14px;}
+	#result { margin:2px; padding:4px; font-size:16px; } 
+		}
 	/* #### iPhone 6 and 6 plus Portrait or Landscape #### */
-	@media (min-device-height: 667px) and (min-device-width: 375px) and (-webkit-min-device-pixel-ratio: 3){
+	@media (min-device-height: 667px) and (min-device-width: 375px) and (-webkit-min-device-pixel-ratio: 3) {
 			  /* some CSS here */
 	.hint { color:red; font-size:16px;}
 	#result { margin:2px; padding:8px; font-size:20px; } 
-	  }
+	}
 
 	  /* #### Tablets Portrait or Landscape #### */
-	  @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-	.hint { color:red; font-size:20px;}
-	#result { margin:2px; padding:10px; font-size:24px; } 
+	  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+	.hint { color:red; font-size:24px;}
+	#result { line-height: 200%; margin:50px; padding:30px; font-size:24px; } 
 			    /* some CSS here */
-		}
+#sw-slots li {
+	padding:0 8px; 
+	font:bold 24px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
+}
+	}
 
 </style>
 

@@ -7,6 +7,7 @@
 
 var score = 0;
 var already_seen = [];
+var duplicate_score_message = 0;
 
 function addNBSP(a) {
 	var re = / /g;
@@ -601,6 +602,8 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 function foodPartitifAgreement(partitif, food)
 {
 	if (partitif == 'de') return true;
+	else if (partitif == "d'" && starts_with_vowel(food))
+		return true;
 	else if ((partitif == 'des' || partitif == 'les') && !isInList(food, food_plural))
 		return false;
 	else if (isInList(food, food_plural) && !isInList(partitif, ['des', 'les', 'de']))
@@ -918,7 +921,6 @@ function done() {
 
 	if (valid_sentence) {
 		phrase = phrase.replace(re, ' ');
-		document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">' + getBravoMessage() + '</span>';  
 		var utterThis = new SpeechSynthesisUtterance(phrase);
 		utterThis.lang = 'FR';
 		window.speechSynthesis.speak(utterThis);
@@ -926,6 +928,13 @@ function done() {
 		if (!isInList(phrase, already_seen)) {
 			score += 1;
 			already_seen.push(phrase);
+			document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">' + getBravoMessage() + '</span>';  
+		}
+		else if (duplicate_score_message < 3) {
+			document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">Only new sentences count towards your score</span>';  
+			duplicate_score_message += 1;
+		} else {
+			document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">' + getBravoMessage() + '</span>';  
 		}
 		document.getElementById('sw-score').innerHTML = 'Score: ' + score;
 	} else {
@@ -995,48 +1004,8 @@ function assertInvalid(subject, negation1, verb_stem, verb_ending, negation2, pa
 	}
 }
 
-// Let's figure out whether a sentence is valid 
-// by calling the function isValidSentence() and giving it 7 parameters
-//
-// The 7 parameters correspond to what you will see on the slot machine in the app
-//
-//   subject  negation1  verb_stem  verb_ending  negation2  partitif   food
-//   -------  ---------  ---------  -----------  ---------  --------   ----------
-//     j'                  aim         e                     le        gateau
-//     je        ne        mang        es        pas         la        pain
-//     tu        n'        détest      is                    les       fraise
-//     il                   ...        it                    du        framboises
-//     elle                            ons                   de la      ...
-//     on                              ions                  des       
-//     nous                            ez                          
-//     vous                            iez                  
-//     ils                             ent                  
-//     elles                                               
-//
-//   no negation for now
-//   
-//   Contents:
-//   subject_pronoun
-//   subject_singular
-//   subject_plural
-//   subject_plus_moi
-//
-//   verb_stem_er
-//   verb_stem_ir
-//   verb_stem_re
-//
-//   partitif
-//
-//   food_masculine
-//   food_feminine
-//   food_plural
-//
-//   subject/verb agreement:
-//   regles subject verb er
-//   regles subject verb ir
-//   regles subject verb re
-//
 console.log('Testing assertions (look for "assertion failed" message)');
+
 assertValid("J'", "", "aim", "e", "", "le", "beurre");
 assertInvalid("J'", "", "aim", "es", "", "le", "pains");
 assertValid("Nous", "", "aim", "ons", "", "le", "chocolat");

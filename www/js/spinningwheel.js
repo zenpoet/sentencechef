@@ -115,7 +115,7 @@ var SpinningWheel = {
 		div.id = 'sw-wrapper';
 		div.style.top = window.innerHeight + window.pageYOffset + 'px';		// Place the SW down the actual viewing screen
 		div.style.webkitTransitionProperty = '-webkit-transform';
-		div.innerHTML = '<div id="sw-header">' + '<div id="sw-done">Verify</' + 'div></' + 'div><div id="sw-slots-wrapper"><div id="sw-slots"></' + 'div></' + 'div><div id="sw-frame"></' + 'div>';
+		div.innerHTML = '<div id="sw-header">' + '<div id="sw-score">Score: 0</div><div id="sw-done">Verify</' + 'div></' + 'div><div id="sw-slots-wrapper"><div id="sw-slots"></' + 'div></' + 'div><div id="sw-frame"></' + 'div>';
 
 		document.body.appendChild(div);
 

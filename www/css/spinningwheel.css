@@ -15,7 +15,7 @@
 	opacity: 0.9;
 }
 
-#sw-cancel, #sw-done {
+#sw-cancel, #sw-done, #sw-score {
 	position:absolute;
 	top:7px;
 	height:20px; line-height:20px;
@@ -36,6 +36,13 @@
 	right:7px;
 	float:right;
 	-webkit-border-image:url(../img/sw-button-done.png) 5;
+}
+
+#sw-score {
+	left:7px;
+	float:left;
+	color:white;
+	-webkit-border-image:url(../img/sw-button-cancel.png) 5;
 }
 
 .sw-pressed { opacity:0.4; }

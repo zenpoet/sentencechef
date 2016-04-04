@@ -5,6 +5,9 @@
 
 var reason_not_valid = "";
 
+var score = 0;
+var already_seen = [];
+
 function addNBSP(a) {
 	var re = / /g;
 	for (var i = 0; i < a.length; ++i)
@@ -258,8 +261,11 @@ neg2.push("pas");
 // something is part of an array
 function isInList(element, arr)
 {
-	var re = /&nbsp;/g;
-	if (arr.indexOf(element) >= 0 || arr.indexOf(element.replace(re, ' ')) >= 0)
+	var re1 = /&nbsp;/g;
+	var re2 = / /g;
+	if (arr.indexOf(element) >= 0 
+			|| arr.indexOf(element.replace(re1, ' '))  >= 0
+			|| arr.indexOf(element.replace(re2, '&nbsp;'))  >= 0)
 		return true;
 	else
 		return false;
@@ -497,6 +503,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 		else
 		{
 			reason_not_valid="Remember the rules for preference verbs";
+			reason.push('preference_verb_error');
 			return false;
 		}
 	}
@@ -509,7 +516,8 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 				if (partitif == "des")
 					return true;
 				else {
-					reason.push('food_partitif_agreement');
+					if (partitif != "les")
+						reason.push('food_partitif_agreement');
 					return false;
 				}
 			}
@@ -558,13 +566,13 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 			else if (starts_with_vowel(food) && partitif == "d'") {
 				return true;
 			} else {
-				reason.push('negative_sentence_unknown');
+				reason.push('negative_sentence_unknown_2');
 				return false;
 			}
 		}
 	}		
 
-	reason.push('negative_sentence_unknown');
+	reason.push('negative_sentence_unknown_3');
 	return false;
 }
 
@@ -670,11 +678,6 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		isValid = false;
 		return false;
 	}
-
-	if (isValid)
-		console.log("VALID: ");
-	else
-		console.log("INVALID: ");
 
 	displaySentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food);
 	return isValid;
@@ -832,6 +835,12 @@ function done() {
 		var utterThis = new SpeechSynthesisUtterance(phrase);
 		utterThis.lang = 'FR';
 		window.speechSynthesis.speak(utterThis);
+
+		if (!isInList(phrase, already_seen)) {
+			score += 1;
+			already_seen.push(phrase);
+		}
+		document.getElementById('sw-score').innerHTML = 'Score: ' + score;
 	} else {
 		var hint = '';
 		if (isInList('subject', reason) && isInList('verb_ending', reason))
@@ -864,6 +873,26 @@ function done() {
 function cancel() {
 	document.getElementById('result').innerHTML = 'cancelled!';
 }
+
+
+function assertValid(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) {
+	reason = []
+	console.log(' ');
+	if (!isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food, reason)) {
+		displaySentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food);
+		console.log('assertion failed: ' + reason.toString());
+	}
+}
+
+function assertInvalid(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) {
+	reason = []
+	console.log(' ');
+	if (isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food,reason)) {
+		displaySentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food);
+		console.log('assertion failed: ' + reason.toString());
+	}
+}
+
 
 // Let's figure out whether a sentence is valid 
 // by calling the function isValidSentence() and giving it 7 parameters
@@ -906,31 +935,16 @@ function cancel() {
 //   regles subject verb ir
 //   regles subject verb re
 //
-console.log("===");
-console.log(isValidSentence("J'", "", "aim", "e", "", "le", "pain"));
-console.log("===");
-console.log(isValidSentence("J'", "", "aim", "es", "", "le", "pain"));
-console.log("===");
-console.log(isValidSentence("Elle", "", "mang", "e", "", "le", "pain"));
-console.log("===");
-console.log(isValidSentence("Elle", "", "mang", "e", "", "du", "pain"));
-console.log("===");
-console.log(isValidSentence("Elle", "", "mang", "e", "", "de la", "fraises"));
-console.log("===");
-console.log(isValidSentence("Nous", "", "aim", "e", "", "de la", "fraises"));
-console.log("===");
-console.log(isValidSentence("Nous", "", "aim", "ons", "", "la", "chocolat"));
-console.log("===");
-console.log(isValidSentence("Nous", "", "aim", "ons", "", "le", "chocolat"));
-console.log("===");
-console.log(isValidSentence("Nous", "n'", "aim", "ons", "pas", "le", "beurre"));
-console.log("===");
-console.log(isValidSentence("On", "n'", "aim", "e", "pas", "le", "beurre"));
-console.log("===");
-console.log(isValidSentence("On", "", "aim", "e", "", "le", "beurre"));
-console.log("===");
-console.log(isValidSentence("Elle", "", "cherch", "e", "", "le", "beurre"));
-console.log("===");
-console.log(isValidSentence("Elle", "", "cherch", "e", "pas", "de", "bonbon"));
-console.log(isValidSentence("Elle", "&nbsp;", "cherch", "e", "pas", "de", "bonbon"));
-
+console.log('Testing assertions (look for "assertion failed" message)');
+assertValid("J'", "", "aim", "e", "", "le", "beurre");
+assertInvalid("J'", "", "aim", "es", "", "le", "pains");
+assertValid("Nous", "", "aim", "ons", "", "le", "chocolat");
+assertValid("Elle", "", "aim", "e", "", "le", "beurre");
+assertInvalid("Elle", "", "cherch", "e", "", "le", "beurre");
+assertInvalid("Elle", "&nbsp;", "cherch", "e", "pas", "de", "bonbon");
+assertValid("Nous", "n'", "aim", "ons", "pas", "le", "beurre");
+assertValid("On", "n'", "aim", "e", "pas", "le", "beurre");
+assertValid("On", "", "aim", "e", "", "le", "beurre");
+assertValid("Ma famille et moi", "", "aim", "ons", "", "le", "beurre");
+if (!isInList("Ma famille et moi", subject_plus_moi))
+	console.log("Yo, something is wrong: " + subject_plus_moi.toString());

@@ -393,7 +393,7 @@ function subjectVerbAgreement_RE(subject, verb_stem, verb_ending) {
     return true;
   } else if (isInList(subject, subject_singular) && verb_ending == "") {
     return true;
-  } else if (isInList(subject, subject_plural) && verb_ending == "ent") {
+  } else if ((isInList(subject, subject_plural) || isInList(subject, ['Ils','Elles'])) && verb_ending == "ent") {
     return true;
   } else if (isInList(subject, subject_plus_moi) && verb_ending == "ons") {
     return true;
@@ -432,9 +432,9 @@ function subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending, reason)
 	if (is_ER_verb(verb_stem))
 		return subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason);			
 	else if (is_IR_verb(verb_stem))
-		return subjectVerbAgreement_IR(subject, verb_ending);			
+		return subjectVerbAgreement_IR(subject, verb_stem, verb_ending);			
 	else if (is_RE_verb(verb_stem))
-		return subjectVerbAgreement_RE(subject, verb_ending);			
+		return subjectVerbAgreement_RE(subject, verb_stem, verb_ending);			
 	else {
 		console.log("not an er, ir or re verb_stem");
 		return false;
@@ -820,12 +820,13 @@ function done() {
 		phrase += '<span class="mistake">';
 	}
 
-	if (valid_sentence)
-		if (subject == "J'" && starts_with_vowel(verb_stem)) {
+	if (valid_sentence) {
+		if ((subject == "J'" || neg1 == "n'") && starts_with_vowel(verb_stem)) {
 			phrase += '';
 		}
 		else {
-		phrase += '&nbsp;'; 
+			phrase += '&nbsp;'; 
+		}
 	}
 	else
 		phrase += '&nbsp;'; 
@@ -1044,3 +1045,7 @@ if (!isInList("Mes soeurs", subject_plural))
 	console.log("Yo, something is wrong: " + subject_plural.toString());
 assertValid("Mes soeurs", "", "coup", "ent", "", "des", "quiches");
 assertInvalid("Nous", "", "jett", "eons", "", "des", "quiches");
+assertValid("Ils", "n'", "aim", "ent", "pas", "la", "glace");
+assertInvalid("Nous", "", "fin", "issons", "", "les", "poissons");
+assertValid("Ils", "", "mord", "ent", "", "des", "poissons");
+assertValid("Ils", "", "détrui", "sent", "", "des", "poissons");

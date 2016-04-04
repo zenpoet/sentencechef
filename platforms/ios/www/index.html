@@ -24,6 +24,21 @@ window.addEventListener('load', function(){ setTimeout(function(){ window.scroll
 	.hint { color:red; font-size:14px;}
 	.bravo { color:cyan;}
 	#result { margin:2px; padding:4px; font-size:16px; } 
+
+	/* #### iPhone 6 and 6 plus Portrait or Landscape #### */
+	@media (min-device-height: 667px) and (min-device-width: 375px) and (-webkit-min-device-pixel-ratio: 3){
+			  /* some CSS here */
+	.hint { color:red; font-size:16px;}
+	#result { margin:2px; padding:8px; font-size:20px; } 
+	  }
+
+	  /* #### Tablets Portrait or Landscape #### */
+	  @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+	.hint { color:red; font-size:20px;}
+	#result { margin:2px; padding:10px; font-size:24px; } 
+			    /* some CSS here */
+		}
+
 </style>
 
 </head>

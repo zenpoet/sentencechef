@@ -270,7 +270,7 @@ function isInList(element, arr)
 		return false;
 }
 
-function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
+function verbAccent(subject, verb_stem, verb_ending, reason) {
   // check special case for préférer and congeler
   if (verb_stem=='préfér' || verb_stem=='congél') { 
     // must be nous vous or equivalent
@@ -287,6 +287,29 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
       return false;
 	}
   }
+
+  return true;
+}
+
+function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
+		/*
+  // check special case for préférer and congeler
+  if (verb_stem=='préfér' || verb_stem=='congél') { 
+    // must be nous vous or equivalent
+	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi)) {
+	  reason.push('special_case_verb_accent');
+	  reason.push('verb_stem');
+      return false;
+	}
+  }
+  else if (verb_stem=='préfèr' || verb_stem=='congèl') {
+	if (subject == "Nous" || subject == "Vous" || isInList(subject, subject_plus_moi)) {
+	  reason.push('special_case_verb_accent');
+	  reason.push('verb_stem');
+      return false;
+	}
+  }
+  */
 
   if (isInList(subject, ["Je", "J'"]) && verb_ending == "e") {
     return true;
@@ -347,7 +370,6 @@ function subjectVerbAgreement_IR(subject, verb_stem, verb_ending) {
   } else if (isInList(subject, subject_plus_moi) && verb_ending == "issons") {
     return true;
   } else {
-    reason_not_valid="Invalid verb conjugation: the verb ending should agree with its subject";
     return false;
   }
 }
@@ -376,7 +398,6 @@ function subjectVerbAgreement_RE(subject, verb_stem, verb_ending) {
   } else if (isInList(subject, subject_plus_moi) && verb_ending == "ons") {
     return true;
   } else {
-    reason_not_valid="Invalid verb conjugation: the verb ending should agree with its subject";
     return false;
   }
 }
@@ -481,24 +502,15 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 	if (isInList(verb_stem, preference_verbs))
 	{
 		if (starts_with_vowel(food) && partitif == "l'")
-		{
 			return true;
-		}
 		else if (is_food_masculine(food) && partitif == "le")
-		{
 			return true;
-		}
 		else if (is_food_feminine(food) && partitif == "la")
-		{
 			return true;
-		}
 		else if (is_food_plural(food) && partitif == "les")
-		{
 			return true;
-		}
 		else
 		{
-			reason_not_valid="Remember the rules for preference verbs";
 			reason.push('preference_verb_error');
 			return false;
 		}
@@ -514,6 +526,8 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 				else {
 					if (partitif != "les")
 						reason.push('food_partitif_agreement');
+					else
+						reason.push('food_non_partitif');
 					return false;
 				}
 			}
@@ -524,7 +538,10 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 					if (partitif == "de l'")
 						return true;
 					else {
-						reason.push('food_partitif_liaison');
+						if (!isInList(partitif, ["l'"]))
+							reason.push('food_partitif_liaison');
+						else
+							reason.push('food_non_partitif');
 						return false;
 					}
 				}
@@ -535,7 +552,10 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 						if (partitif == "du")
 							return true;
 						else {
-							reason.push('food_partitif_agreement');
+							if (partitif == 'le')
+								reason.push('food_non_partitif');
+							else
+								reason.push('food_partitif_agreement');
 							return false;
 						}
 					}
@@ -544,7 +564,10 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 						if (partitif == "de la")
 							return true;
 						else {
-							reason.push('food_partitif_agreement');
+							if (partitif == 'la')
+								reason.push('food_non_partitif');
+							else
+								reason.push('food_partitif_agreement');
 							return false;
 						}
 					}
@@ -634,6 +657,12 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		return false;
 	}
 
+	if (!verbAccent(subject, verb_stem, verb_ending, reason)) {
+		reason.push('verb_stem');
+		isValid = false;
+		return false;
+	}
+
 	if (subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending, reason) != true) {
 		console.log("subject does not agree with verb ending" + subject + verb_stem + verb_ending);
 		reason.push('subject');
@@ -671,17 +700,17 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		}
 	}
 
-	if (!foodPartitifAgreement(partitif, food)) {
-		reason.push('partitif');
-		reason.push('food');
-		reason.push('food_partitif_agreement');
-		return false;
-	}
-
 	if (!foodPartitifLiaison(partitif, food)) {
 		reason.push('partitif');
 		reason.push('food');
 		reason.push('food_partitif_liaison');
+		return false;
+	}
+
+	if (!foodPartitifAgreement(partitif, food)) {
+		reason.push('partitif');
+		reason.push('food');
+		reason.push('food_partitif_agreement');
 		return false;
 	}
 
@@ -774,7 +803,7 @@ function done() {
 	if (!valid_sentence && isInList('negation1', reason))
 		phrase += '</span>';
 
-	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
+	if (!valid_sentence && (isInList('verb_vowel_agree', reason) || isInList('special_case_verb_accent', reason))) {
 		phrase += '<span class="mistake">';
 	}
 	phrase += '&nbsp;';      // verb stem
@@ -782,8 +811,9 @@ function done() {
 	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
 		phrase += verb_stem.slice(0,1);
 	}
-	else
+	else {
 		phrase += verb_stem;      // verb stem
+	}
 
 	if (!valid_sentence && isInList('verb_stem', reason))
 		phrase += '</span>';
@@ -858,7 +888,9 @@ function done() {
 		document.getElementById('sw-score').innerHTML = 'Score: ' + score;
 	} else {
 		var hint = '';
-		if (isInList('subject', reason) && isInList('verb_ending', reason))
+		if (isInList('special_case_verb_accent', reason))
+				hint = "<span class='hint'>careful with the accent</span>";
+		else if (isInList('subject', reason) && isInList('verb_ending', reason))
 			hint = '<span class="hint">please conjugate your verb</span>';
 		else if (isInList('subject_verb_apostrophe1', reason)) {
 			hint = '<span class="hint">verb starts with vowel</span>';
@@ -882,8 +914,10 @@ function done() {
 				hint = '<span class="hint">watch the article and the first letter of the noun</span>';
 		else if (isInList('negative_sentence_d', reason))
 				hint = "<span class='hint'>negative sentence, use <b>de</b> or <b>d'</b></span>";
-		else if (isInList('special_case_verb_accent', reason))
-				hint = "<span class='hint'>careful with the accent</span>";
+		else if (isInList('food_non_partitif', reason))
+				hint = "<span class='hint'>grammatically ok, but not a partitif</span>";
+		else if (isInList('partitif', reason))
+				hint = "<span class='hint'>incorrect application of the partitif</span>";
 		else
 			hint = reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
@@ -972,3 +1006,6 @@ assertInvalid("Ma famille et moi", "", "aim", "ent", "", "le", "beurre");
 assertInvalid("Je", "", "ador", "e", "", "le", "beurre");
 assertValid("J'", "", "ador", "e", "", "le", "beurre");
 assertValid("Il", "", "cherch", "e", "", "des", "quiches");
+if (!isInList("Mes soeurs", subject_plural))
+	console.log("Yo, something is wrong: " + subject_plural.toString());
+assertValid("Mes soeurs", "", "coup", "ent", "", "des", "quiches");

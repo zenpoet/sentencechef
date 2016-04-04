@@ -777,6 +777,13 @@ function openFrench() {
 	SpinningWheel.open();
 }
 
+var bravo = [ 'Bravo', 'Super', 'Bien joué', 'Continue!', 'Cool, cool!' ];
+
+function getBravoMessage() {
+	var r = Math.floor((Math.random() * bravo.length));
+	return bravo[r];
+}
+
 function done() {
 	var phrase = '';
 	var results = SpinningWheel.getSelectedValues();
@@ -905,7 +912,7 @@ function done() {
 
 	if (valid_sentence) {
 		phrase = phrase.replace(re, ' ');
-		document.getElementById('result').innerHTML = '<span class="bravo">Bravo:</span> ' + phrase;  
+		document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">' + getBravoMessage() + '</span>';  
 		var utterThis = new SpeechSynthesisUtterance(phrase);
 		utterThis.lang = 'FR';
 		window.speechSynthesis.speak(utterThis);

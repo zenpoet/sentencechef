@@ -270,6 +270,22 @@ function isInList(element, arr)
 		return false;
 }
 
+function verbJeter(subject, verb_stem, verb_ending, reason) {
+	if (verb_stem=='jett') {
+		if (isInList(subject, subject_plus_moi) || subject == 'Vous' || subject == 'Nous') {
+			reason.push('special_case_jeter');
+			return false;
+		}
+	} else if (verb_stem=='jet') {
+		if (!isInList(subject, subject_plus_moi) && subject != 'Vous' && subject != 'Nous') {
+			reason.push('special_case_jeter');
+			return false;
+		}
+	}
+
+	return true;
+}
+
 function verbAccent(subject, verb_stem, verb_ending, reason) {
   // check special case for préférer and congeler
   if (verb_stem=='préfér' || verb_stem=='congél') { 
@@ -292,25 +308,6 @@ function verbAccent(subject, verb_stem, verb_ending, reason) {
 }
 
 function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
-		/*
-  // check special case for préférer and congeler
-  if (verb_stem=='préfér' || verb_stem=='congél') { 
-    // must be nous vous or equivalent
-	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi)) {
-	  reason.push('special_case_verb_accent');
-	  reason.push('verb_stem');
-      return false;
-	}
-  }
-  else if (verb_stem=='préfèr' || verb_stem=='congèl') {
-	if (subject == "Nous" || subject == "Vous" || isInList(subject, subject_plus_moi)) {
-	  reason.push('special_case_verb_accent');
-	  reason.push('verb_stem');
-      return false;
-	}
-  }
-  */
-
   if (isInList(subject, ["Je", "J'"]) && verb_ending == "e") {
     return true;
   } else if (subject == "Tu" && verb_ending == "es") {
@@ -337,7 +334,10 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
     return true;
   } else if ((subject == "Nous"||isInList(subject, subject_plus_moi)) && verb_stem == "mang" && verb_ending == "eons") { 
 		return true;
-  } else {
+  } /* else if (verb_stem=='jet' && (subject == 'Nous' || isInList(subject, subject_plus_moi))
+		return true;
+  } */
+  else {
     return false;
   }
 }
@@ -662,6 +662,12 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 		return false;
 	}
 
+	if (!verbJeter(subject, verb_stem, verb_ending, reason)) {
+		reason.push('verb_stem');
+		isValid = false;
+		return false;
+	}
+
 	if (!verbAccent(subject, verb_stem, verb_ending, reason)) {
 		reason.push('verb_stem');
 		isValid = false;
@@ -827,11 +833,17 @@ function done() {
 	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
 		phrase += verb_stem.slice(0,1);
 	}
+	else if (!valid_sentence && isInList('special_case_jeter', reason)) {
+		phrase += '<span class="mistake">'; 
+		phrase += verb_stem; 
+	}
 	else {
 		phrase += verb_stem;      // verb stem
 	}
 
-	if (!valid_sentence && isInList('verb_stem', reason))
+	if (!valid_sentence && isInList('special_case_jeter', reason)) {
+		phrase += '</span>';
+	} else if (!valid_sentence && isInList('verb_stem', reason))
 		phrase += '</span>';
 	
 	if (!valid_sentence && isInList('verb_vowel_agree', reason)) {
@@ -906,6 +918,8 @@ function done() {
 		var hint = '';
 		if (isInList('special_case_verb_accent', reason))
 				hint = "<span class='hint'>careful with the accent</span>";
+		else if (isInList('special_case_jeter', reason))
+				hint = "<span class='hint'>Watch your t's</span>";
 		else if (isInList('subject', reason) && isInList('verb_ending', reason))
 			hint = '<span class="hint">please conjugate your verb</span>';
 		else if (isInList('subject_verb_apostrophe1', reason)) {
@@ -938,7 +952,8 @@ function done() {
 		else if (isInList('partitif', reason))
 				hint = "<span class='hint'>incorrect application of the partitif</span>";
 		else
-			hint = reason.toString();
+				hint = "<span class='hint'>try again</span>";
+	//		hint = reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
 	}
 }
@@ -1028,3 +1043,4 @@ assertValid("Il", "", "cherch", "e", "", "des", "quiches");
 if (!isInList("Mes soeurs", subject_plural))
 	console.log("Yo, something is wrong: " + subject_plural.toString());
 assertValid("Mes soeurs", "", "coup", "ent", "", "des", "quiches");
+assertInvalid("Nous", "", "jett", "eons", "", "des", "quiches");

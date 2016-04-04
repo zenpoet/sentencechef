@@ -775,6 +775,9 @@ function openFrench() {
 	SpinningWheel.setDoneAction(done);
 	
 	SpinningWheel.open();
+
+	var total_combinations = Object.keys(subject).length * Object.keys(neg1).length * Object.keys(verb).length * Object.keys(verb_ending).length * Object.keys(neg2).length * Object.keys(partitif).length * Object.keys(food).length;
+	document.getElementById('result').innerHTML = 'Le prof dit: écrivez une phrase correcte<br />Il y a ' + total_combinations.toString() + ' combinaisons possibles';
 }
 
 var bravo = [ 'Bravo', 'Super', 'Bien joué', 'Continue!', 'Cool, cool!' ];
@@ -988,7 +991,6 @@ function assertInvalid(subject, negation1, verb_stem, verb_ending, negation2, pa
 		console.log('assertion failed: ' + reason.toString());
 	}
 }
-
 
 // Let's figure out whether a sentence is valid 
 // by calling the function isValidSentence() and giving it 7 parameters

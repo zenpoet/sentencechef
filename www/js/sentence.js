@@ -147,7 +147,7 @@ verb_stem_er.push("vol");
 verb_stem_er.push("chauff");
 verb_stem_er.push("prépar");
 verb_stem_er.push("congèl");
-verb_stem_er.push("congél");
+verb_stem_er.push("congel");
 verb_stem_er.sort();
 
 // Add to the list of IR verb stem
@@ -289,7 +289,7 @@ function verbJeter(subject, verb_stem, verb_ending, reason) {
 
 function verbAccent(subject, verb_stem, verb_ending, reason) {
   // check special case for préférer and congeler
-  if (verb_stem=='préfér' || verb_stem=='congél') { 
+  if (verb_stem=='préfér' || verb_stem=='congel') { 
     // must be nous vous or equivalent
 	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi)) {
 	  reason.push('special_case_verb_accent');
@@ -896,7 +896,7 @@ function done() {
 	if (!valid_sentence && isInList('partitif', reason))
 		phrase += '</span>';
 
-	if (valid_sentence && starts_with_vowel(food) && ends_with_apostrophe(neg2)) 
+	if (valid_sentence && starts_with_vowel(food) && (ends_with_apostrophe(neg2) || ends_with_apostrophe(partitif))) 
 		phrase += ''; 
 	else if (valid_sentence && (!starts_with_vowel(food))) {
 		phrase += ' '; 

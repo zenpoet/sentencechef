@@ -202,11 +202,12 @@ food_masculine.push("poisson");
 food_masculine.push("beurre");
 food_masculine.push("bonbon");
 food_masculine.push("chocolat");
-food_masculine.push("couscous");
+//food_masculine.push("couscous");
 food_masculine.push("fromage");
 food_masculine.push("sandwich");
 food_masculine.push("légume");
 food_masculine.push("crabe");
+food_masculine.push("pain");
 food_masculine.sort();
 
 // Add to the list of feminine food
@@ -217,6 +218,7 @@ food_feminine.push("quiche");
 food_feminine.push("pomme");
 food_feminine.push("pastèque");
 food_feminine.push("aubergine");
+food_feminine.push("aspèrge");
 food_feminine.push("grenade");
 food_feminine.push("banane");
 food_feminine.push("crêpe");
@@ -224,7 +226,6 @@ food_feminine.push("pomme de terre");
 food_feminine.push("salade");
 food_feminine.push("glace");
 food_feminine.push("saucisse");
-food_feminine.push("pancake");
 food_feminine.push("soupe");
 food_feminine.push("crevette");
 food_feminine.push("framboise");
@@ -236,15 +237,38 @@ food_feminine.sort();
 addNBSP(food_feminine);
 
 var food_plural = [];
-food_plural.push("crabes");
 food_plural.push("pains");
+food_plural.push("frites");
+food_plural.push("brocolis");
+//food_plural.push("couscous");
+food_plural.push("poissons");
+food_plural.push("bonbons");
+food_plural.push("chocolats");
+food_plural.push("fromages");
+food_plural.push("sandwichs");
+food_plural.push("légumes");
+food_plural.push("crabes");
+food_plural.push("carottes");
+food_plural.push("dindes");
 food_plural.push("quiches");
 food_plural.push("pommes");
-food_plural.push("frites");
-food_plural.push("poissons");
 food_plural.push("pastèques");
-food_plural.push("brocolis");
 food_plural.push("aubergines");
+food_plural.push("aspèrges");
+food_plural.push("grenades");
+food_plural.push("bananes");
+food_plural.push("crêpes");
+food_plural.push("pommes de terre");
+food_plural.push("salades");
+food_plural.push("glaces");
+food_plural.push("saucisses");
+food_plural.push("soupes");
+food_plural.push("crevettes");
+food_plural.push("framboises");
+food_plural.push("crème brûlées");
+food_plural.push("myrtilles");
+food_plural.push("boulette de viandes");
+food_plural.push("fraises");
 food_plural.sort();
 addNBSP(food_plural);
 
@@ -319,8 +343,14 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
 	return true;
   } else if (subject == "Elle" && verb_ending == "e") {
     return true;
-  } else if (subject == "Nous" && verb_ending == "ons") {
-    return true;
+  } 
+  else if (subject == "Nous" || isInList(subject, subject_plus_moi)) {
+	if (ends_with(verb_stem, "g")) {
+		return verb_ending == "eons";
+	}
+  	else {
+		return verb_ending == "ons";
+	}
   } else if (subject == "Vous" && verb_ending == "ez") {
     return true;
   } else if (subject == "Ils" && verb_ending == "ent") {
@@ -331,13 +361,7 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
     return true;
   } else if (isInList(subject, subject_plural) && verb_ending == "ent") {
     return true;
-  } else if (isInList(subject, subject_plus_moi) && verb_ending == "ons") {
-    return true;
-  } else if ((subject == "Nous"||isInList(subject, subject_plus_moi)) && verb_stem == "mang" && verb_ending == "eons") { 
-		return true;
-  } /* else if (verb_stem=='jet' && (subject == 'Nous' || isInList(subject, subject_plus_moi))
-		return true;
-  } */
+  }
   else {
     return false;
   }
@@ -472,8 +496,12 @@ function starts_with_vowel(word) {
 	}
 }
 
+function ends_with(word, c) {
+	return word[word.length-1] == c;
+}
+
 function ends_with_apostrophe(word) {
-	return word[word.length-1] == "'";
+	return ends_with(word, "'");
 }
 
 function is_food_masculine(food)
@@ -745,11 +773,19 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 }
 
 function slotifyArray(a) {
-	var n = {}
+	var n = {};
 	for (i = 0; i < a.length; ++i) {
 		n[i]=a[i];		
 	}
 	return n;
+}
+
+function unique(a) {
+	s = new Set();
+	for (i = 0; i < a.length; ++i) {
+		s.add(a[i]);
+	}
+	return Array.from(s); 
 }
 
 function openFrench() {
@@ -761,8 +797,9 @@ function openFrench() {
 
 	var food_tmp = food_feminine;
 	food_tmp = food_tmp.concat(food_masculine);
-	food_tmp.sort();
 	food_tmp = food_tmp.concat(food_plural);
+	food_tmp = unique(food_tmp);
+	food_tmp.sort();
 	var food = slotifyArray(food_tmp);
 
 	var verb = verb_stem_er;
@@ -809,6 +846,11 @@ function done() {
     var sentence_positive = is_sentence_positive(neg1, neg2);
 	var reason = [];
 	var valid_sentence = isValidSentence(subject, neg1, verb_stem, verb_ending, neg2, partitif, food, reason);
+
+	var preference_verb = false;
+
+	if (isInList(verb_stem, preference_verbs))
+		preference_verb = true;
 
 	if (!valid_sentence && isInList('subject', reason))
 		phrase += '<span class="mistake">'; 
@@ -964,10 +1006,59 @@ function done() {
 		}
 		else if (isInList('negation1', reason) && isInList('negation2', reason))
 				hint = '<span class="hint">what are you missing?</span>';
-        else if (sentence_is_positive && isInList('partitif', reason) && isInList('food', reason)) {
-                hint = '<span class="hint">Positive sentence, incorrect partitive</span>';
+		else if (preference_verb) {
+        	if (!(isInList(partitif, ["l'", "le", "la", "les"]))) {
+				hint = '<span class="hint">preference verb, use l&#39, le, la or les</span>';
+			}
+			else if (isInList(food, food_plural) && partitif != "les") {
+				hint = '<span class="hint">masculine, feminine or plural?</span>';
+			} else if (starts_with_vowel(food) && partitif != "l'") {
+				hint = '<span class="hint">food starts with vowel</span>';
+			} else {
+				hint = '<span class="hint">masculine, feminine or plural?</span>';
+			}
+        } else {
+			if (sentence_positive) {
+				if (!isInList(partitif, ["du", "de la", "des", "de l'"])) {
+					hint = '<span class="hint">Not a preference, positive sentence, use du, de la, des, de l&#39</span>';
+				} else if (isInList(food, food_plural) && partitif != "des") {
+					hint = '<span class="hint">masculine, feminine or plural?</span>';
+				} else if (starts_with_vowel(food) && partitif != "de l'") {
+					hint = '<span class="hint">food starts with vowel</span>';
+				} else {
+					hint = '<span class="hint">feminine, masculine or plural?</span>';
+				}
+			}
+			else {
+				if (!isInList(partitif, ["de", "d'"])) {
+					hint = '<span class="hint">Not a preference, not a positive sentence, de, or d&#39</span>';
+				}
+				else if (starts_with_vowel(food) && partitif != "d'") {
+					hint = '<span class="hint">careful, food starts with vowel</span>';
+				}
+				else if (!starts_with_vowel(food) && partitif != "de") {
+					hint = '<span class="hint">food does not start with a vowel</span>';
+				}
+			}
+		}
+
+
+			/*
+        else if (sentence_positive && !preference_verb && isInList('food_partitif_agreement', reason) && isInList(partitif, ["de", "d'"])) {
+				hint = '<span class="hint">Wrong partitive, review the rule for positive sentences</span>';
         }
-        else if (sentence_is_positive && isInList('food_partitif_liaison', reason)) {
+        else if (preference_verb && isInList('food_partitif_agreement', reason) && !(isInList(partitif, ["l'", "le", "la", "les"]))) {
+				hint = '<span class="hint">For preference verbs, use l&#39, le, la or les</span>';
+        }
+        else if (preference_verb && isInList('food_partitif_liaison', reason) && (!isInList(partitif,["l'", "le", "la", "les"]))) {
+				hint = '<span class="hint">Use l&#39, le, la or les for preference verbs</span>';
+        }
+        else if (sentence_positive && preference_verb && isInList('food_partitif_agreement', reason) && isInList(partitif, ["l'", "le", "la", "les"])) {
+			hint = '<span class="hint">masculine, feminine, or plural?</span>';
+        }
+		else if (isInList('preference_verb_error', reason))
+				hint = '<span class="hint">Use l&#39, le, la or les for preference verbs</span>';
+        else if (sentence_positive && isInList('food_partitif_liaison', reason)) {
             hint = '<span class="hint">Positive sentence, incorrect partitive</span>';
         }
         else if (isInList('food_partitif_agreement', reason)) {
@@ -975,6 +1066,9 @@ function done() {
         }
         else if (isInList('food_partitif_liaison', reason)) {
 				hint = '<span class="hint">Watch the article and the first letter of the noun</span>';
+        }
+        else if (sentence_positive && isInList('partitif', reason) && isInList('food', reason)) {
+                hint = '<span class="hint">Positive sentence, incorrect partitive</span>';
         }
 		else if (isInList('negative_sentence_d', reason))
 				hint = "<span class='hint'>negative sentence, use <b>de</b> or <b>d'</b></span>";
@@ -984,11 +1078,8 @@ function done() {
 				hint = "<span class='hint'>incorrect application of the partitif</span>";
 		else
 				hint = "<span class='hint'>try again</span>";
-        hint += reason.toString();
-        if (sentence_is_positive)
-            hint += 'Positive';
-        else
-            hint += 'Negative';
+			*/
+        hint += '<br />' + reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
 	}
 }
@@ -1042,3 +1133,6 @@ assertValid("Ils", "n'", "aim", "ent", "pas", "la", "glace");
 assertInvalid("Nous", "", "fin", "issons", "", "les", "poissons");
 assertValid("Ils", "", "mord", "ent", "", "des", "poissons");
 assertValid("Ils", "", "détrui", "sent", "", "des", "poissons");
+assertInvalid("Il", "", "coup", "e", "", "d'", "aubergine");
+assertInvalid("Il", "", "aim", "e", "", "des", "boulette de viande");
+assertValid("Il", "", "aim", "e", "", "du", "boulette de viande");

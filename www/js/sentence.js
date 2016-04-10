@@ -148,6 +148,8 @@ verb_stem_er.push("chauff");
 verb_stem_er.push("prépar");
 verb_stem_er.push("congèl");
 verb_stem_er.push("congel");
+verb_stem_er.push("achet");
+verb_stem_er.push("achèt");
 verb_stem_er.sort();
 
 // Add to the list of IR verb stem
@@ -233,12 +235,14 @@ food_feminine.push("crème brûlée");
 food_feminine.push("myrtille");
 food_feminine.push("boulette de viande");
 food_feminine.push("fraise");
+food_feminine.push("tomate");
 food_feminine.sort();
 addNBSP(food_feminine);
 
 var food_plural = [];
 food_plural.push("pains");
 food_plural.push("frites");
+food_plural.push("artichauts");
 food_plural.push("brocolis");
 //food_plural.push("couscous");
 food_plural.push("poissons");
@@ -269,6 +273,7 @@ food_plural.push("crème brûlées");
 food_plural.push("myrtilles");
 food_plural.push("boulette de viandes");
 food_plural.push("fraises");
+food_plural.push("tomates");
 food_plural.sort();
 addNBSP(food_plural);
 
@@ -283,8 +288,7 @@ neg2.push("pas");
 
 // this is a function that returns whether
 // something is part of an array
-function isInList(element, arr)
-{
+function isInList(element, arr) {
 	var re1 = /&nbsp;/g;
 	var re2 = / /g;
 	if (arr.indexOf(element) >= 0 
@@ -293,6 +297,10 @@ function isInList(element, arr)
 		return true;
 	else
 		return false;
+}
+
+function isBlank(w) {
+	return w=="" || w=="&nbsp;";
 }
 
 function verbJeter(subject, verb_stem, verb_ending, reason) {
@@ -313,7 +321,7 @@ function verbJeter(subject, verb_stem, verb_ending, reason) {
 
 function verbAccent(subject, verb_stem, verb_ending, reason) {
   // check special case for préférer and congeler
-  if (verb_stem=='préfér' || verb_stem=='congel') { 
+  if (verb_stem=='préfér' || verb_stem=='congel' || verb_stem=='achet') { 
     // must be nous vous or equivalent
 	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi)) {
 	  reason.push('special_case_verb_accent');
@@ -321,7 +329,7 @@ function verbAccent(subject, verb_stem, verb_ending, reason) {
       return false;
 	}
   }
-  else if (verb_stem=='préfèr' || verb_stem=='congèl') {
+  else if (verb_stem=='préfèr' || verb_stem=='congèl' || verb_stem=='achèt') {
 	if (subject == "Nous" || subject == "Vous" || isInList(subject, subject_plus_moi)) {
 	  reason.push('special_case_verb_accent');
 	  reason.push('verb_stem');
@@ -406,17 +414,17 @@ function subjectVerbAgreement_RE(subject, verb_stem, verb_ending) {
     return true;
   } else if (subject == "Tu" && verb_ending == "s") {
     return true;
-  } else if (subject == "Il" && verb_ending == "") {
+  } else if (subject == "Il" && isBlank(verb_ending)) {
     return true;
-  } else if (subject == "Elle" && verb_ending == "") {
+  } else if (subject == "Elle" && isBlank(verb_ending)) {
     return true;
-  } else if (subject == "On" && verb_ending == "") {
+  } else if (subject == "On" && isBlank(verb_ending)) {
     return true;
   } else if (subject == "Nous" && verb_ending == "ons") {
     return true;
   } else if (subject == "Vous" && verb_ending == "ez") {
     return true;
-  } else if (isInList(subject, subject_singular) && verb_ending == "") {
+  } else if (isInList(subject, subject_singular) && isBlank(verb_ending)) {
     return true;
   } else if ((isInList(subject, subject_plural) || isInList(subject, ['Ils','Elles'])) && verb_ending == "ent") {
     return true;
@@ -805,6 +813,7 @@ function openFrench() {
 	var verb = verb_stem_er;
 	verb = verb.concat(verb_stem_ir);
 	verb = verb.concat(verb_stem_re);
+	verb.sort();
 
 	SpinningWheel.addSlot(subject, '', 3);
 	SpinningWheel.addSlot(neg1, 'right', 0);
@@ -820,7 +829,9 @@ function openFrench() {
 	SpinningWheel.open();
 
 	var total_combinations = Object.keys(subject).length * Object.keys(neg1).length * Object.keys(verb).length * Object.keys(verb_ending).length * Object.keys(neg2).length * Object.keys(partitif).length * Object.keys(food).length;
-	document.getElementById('result').innerHTML = 'Le prof dit: écrivez une phrase correcte<br />Il y a ' + total_combinations.toString() + ' combinaisons possibles';
+	total_combinations = Math.floor(total_combinations / 1000000);
+	document.getElementById('result').innerHTML = 'Over <font size=+1>' + total_combinations.toString() + ' MILLION combos</font><br />How many correct sentences can you find?';
+//	document.getElementById('result').innerHTML = 'Le prof dit: écrivez une phrase correcte<br />Il y a ' + total_combinations.toString() + ' combinaisons possibles';
 }
 
 var bravo = [ 'Bravo', 'Super', 'Bien joué', 'Continue!', 'Cool, cool!' ];
@@ -1004,11 +1015,15 @@ function done() {
 			else
 				hint = '<span class="hint">watch the negation and the first letter of the verb</span>';
 		}
-		else if (isInList('negation1', reason) && isInList('negation2', reason))
+		else if (isInList('negation1', reason) && isInList('negation2', reason)) {
 				hint = '<span class="hint">what are you missing?</span>';
+		}
+		else if (isInList('food_non_partitif', reason)) {
+				hint = "<span class='hint'>grammatically ok, but not a partitive</span>";
+		}
 		else if (preference_verb) {
         	if (!(isInList(partitif, ["l'", "le", "la", "les"]))) {
-				hint = '<span class="hint">preference verb, use l&#39, le, la or les</span>';
+				hint = '<span class="hint">preference verb: use l&#39, le, la or les</span>';
 			}
 			else if (isInList(food, food_plural) && partitif != "les") {
 				hint = '<span class="hint">masculine, feminine or plural?</span>';
@@ -1017,21 +1032,39 @@ function done() {
 			} else {
 				hint = '<span class="hint">masculine, feminine or plural?</span>';
 			}
-        } else {
-			if (sentence_positive) {
-				if (!isInList(partitif, ["du", "de la", "des", "de l'"])) {
-					hint = '<span class="hint">Not a preference, positive sentence, use du, de la, des, de l&#39</span>';
-				} else if (isInList(food, food_plural) && partitif != "des") {
+        } 
+		else {
+			if (isInList(food, food_plural) && partitif == "les") {
+				hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
+			} 
+			else if (isInList(food, food_feminine) && partitif == "la" && !starts_with_vowel(food)) {
+				hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
+			} 
+			else if ((isInList(food, food_feminine) || isInList(food, food_masculine)) && partitif == "l'" && starts_with_vowel(food)) {
+				hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
+			} 
+			else if (isInList(food, food_masculine) && partitif == "le") {
+				hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
+			} 
+			else if (!isInList(partitif, ["du", "de la", "des", "de l'"])) {
+				hint = '<span class="hint">Not a preference verb &amp; positive sentence: use du, de la, des, de l&#39</span>';
+			} 
+			else if (sentence_positive) {
+				if (isInList(food, food_plural) && partitif != "des") {
 					hint = '<span class="hint">masculine, feminine or plural?</span>';
-				} else if (starts_with_vowel(food) && partitif != "de l'") {
+				}
+				else if (starts_with_vowel(food) && partitif != "de l'") {
 					hint = '<span class="hint">food starts with vowel</span>';
 				} else {
 					hint = '<span class="hint">feminine, masculine or plural?</span>';
 				}
 			}
 			else {
-				if (!isInList(partitif, ["de", "d'"])) {
-					hint = '<span class="hint">Not a preference, not a positive sentence, de, or d&#39</span>';
+				if (isInList(food, food_plural) && partitif == "les") {
+					hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
+				} 
+				else if (!isInList(partitif, ["de", "d'"])) {
+					hint = '<span class="hint">Not a preference verb &amp; negative sentence: use de or d&#39</span>';
 				}
 				else if (starts_with_vowel(food) && partitif != "d'") {
 					hint = '<span class="hint">careful, food starts with vowel</span>';
@@ -1041,7 +1074,6 @@ function done() {
 				}
 			}
 		}
-
 
 			/*
         else if (sentence_positive && !preference_verb && isInList('food_partitif_agreement', reason) && isInList(partitif, ["de", "d'"])) {
@@ -1132,7 +1164,7 @@ assertInvalid("Nous", "", "jett", "eons", "", "des", "quiches");
 assertValid("Ils", "n'", "aim", "ent", "pas", "la", "glace");
 assertInvalid("Nous", "", "fin", "issons", "", "les", "poissons");
 assertValid("Ils", "", "mord", "ent", "", "des", "poissons");
-assertValid("Ils", "", "détrui", "sent", "", "des", "poissons");
 assertInvalid("Il", "", "coup", "e", "", "d'", "aubergine");
 assertInvalid("Il", "", "aim", "e", "", "des", "boulette de viande");
-assertValid("Il", "", "aim", "e", "", "du", "boulette de viande");
+assertInvalid("Il", "", "aim", "e", "", "du", "boulette de viande");
+assertValid("On", "", "vend", "", "", "de la", "boulette de viande");

@@ -5,9 +5,19 @@
  * @todo, FIXME:   jette, jetons
 */
 
-var score = 0;
 var already_seen = [];
 var duplicate_score_message = 0;
+
+function setScore(score) {
+	localStorage.setItem('score', score);
+}
+
+function getScore() {
+	if (!localStorage.getItem('score'))
+		setScore(0);
+
+	return Number(localStorage.getItem('score'));
+}
 
 function addNBSP(a) {
 	var re = / /g;
@@ -979,7 +989,7 @@ function done() {
 		window.speechSynthesis.speak(utterThis);
 
 		if (!isInList(phrase, already_seen)) {
-			score += 1;
+			setScore(getScore()+1);
 			already_seen.push(phrase);
 			document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">' + getBravoMessage() + '</span>';  
 		}
@@ -989,7 +999,7 @@ function done() {
 		} else {
 			document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">' + getBravoMessage() + '</span>';  
 		}
-		document.getElementById('sw-score').innerHTML = 'Score: ' + score;
+		document.getElementById('sw-score').innerHTML = 'Score: ' + getScore();
 	} else {
 		var hint = '';
 		if (isInList('special_case_verb_accent', reason))

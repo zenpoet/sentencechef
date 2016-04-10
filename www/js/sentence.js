@@ -1121,7 +1121,7 @@ function done() {
 		else
 				hint = "<span class='hint'>try again</span>";
 			*/
-        hint += '<br />' + reason.toString();
+    //    hint += '<br />' + reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
 	}
 }

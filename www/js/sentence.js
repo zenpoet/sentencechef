@@ -715,7 +715,7 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 			console.log(reason.toString());
 			return false;
 		}
-	}
+    }
 
 	if (!foodPartitifLiaison(partitif, food)) {
 		reason.push('partitif');
@@ -806,7 +806,7 @@ function done() {
 	var neg2 = results.values[4].replace(re,'');
 	var partitif = results.values[5].replace(re, ' ');
 	var food = results.values[6].replace(re,' ');
-
+    var sentence_positive = is_sentence_positive(neg1, neg2);
 	var reason = [];
 	var valid_sentence = isValidSentence(subject, neg1, verb_stem, verb_ending, neg2, partitif, food, reason);
 
@@ -964,19 +964,31 @@ function done() {
 		}
 		else if (isInList('negation1', reason) && isInList('negation2', reason))
 				hint = '<span class="hint">what are you missing?</span>';
-		else if (isInList('food_partitif_agreement', reason))
+        else if (sentence_is_positive && isInList('partitif', reason) && isInList('food', reason)) {
+                hint = '<span class="hint">Positive sentence, incorrect partitive</span>';
+        }
+        else if (sentence_is_positive && isInList('food_partitif_liaison', reason)) {
+            hint = '<span class="hint">Positive sentence, incorrect partitive</span>';
+        }
+        else if (isInList('food_partitif_agreement', reason)) {
 				hint = '<span class="hint">masculine, feminine, or plural?</span>';
-		else if (isInList('food_partitif_liaison', reason))
-				hint = '<span class="hint">watch the article and the first letter of the noun</span>';
+        }
+        else if (isInList('food_partitif_liaison', reason)) {
+				hint = '<span class="hint">Watch the article and the first letter of the noun</span>';
+        }
 		else if (isInList('negative_sentence_d', reason))
 				hint = "<span class='hint'>negative sentence, use <b>de</b> or <b>d'</b></span>";
 		else if (isInList('food_non_partitif', reason))
-				hint = "<span class='hint'>grammatically ok, but not a partitif</span>";
+				hint = "<span class='hint'>&quot;grammatically ok,&quot; but not a partitif</span>";
 		else if (isInList('partitif', reason))
 				hint = "<span class='hint'>incorrect application of the partitif</span>";
 		else
 				hint = "<span class='hint'>try again</span>";
-	//		hint = reason.toString();
+        hint += reason.toString();
+        if (sentence_is_positive)
+            hint += 'Positive';
+        else
+            hint += 'Negative';
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
 	}
 }

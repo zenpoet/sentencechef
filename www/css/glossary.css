@@ -1,0 +1,31 @@
+body { 
+	color:white;
+	text-align:center; 
+	font-family:Chalkduster,helvetica; 
+	background-image:url(../img/chalkboard-black.jpg); 
+	-webkit-background-size: cover;
+	background-size: cover;
+} 
+
+button { font-size:16px; }
+
+.creators { 
+	font-size: 0.8em; 
+	float: left;
+}
+
+.alignright { float: right; }
+.alignleft { float: left; }
+
+#togame {
+	color: cyan;
+	float: right;
+}
+
+a {
+	color: white;	
+}
+
+a:link, a:visited { 
+	text-decoration: none;
+}

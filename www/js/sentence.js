@@ -1,35 +1,14 @@
-
 /*
- * Let's declare various lists
- *
- * @todo, FIXME:   jette, jetons
-*/
-
-var already_seen = [];
+ *  French class projects, 8th grade
+ *  App to learn the French partitive
+ */ 
 var duplicate_score_message = 0;
+var already_seen = [];
 
-function setScore(score) {
-	localStorage.setItem('score', score);
-}
+// Add different messages when student gets a correct sentence
+var bravo = [ 'Bravo', 'Super', 'Bien joué', 'Continue!', 'Cool, cool!' ];
 
-function getScore() {
-	if (!localStorage.getItem('score'))
-		setScore(0);
-
-	return Number(localStorage.getItem('score'));
-}
-
-function displayScore() {
-	document.getElementById('sw-score').innerHTML = 'Score: ' + getScore();
-}
-
-function addNBSP(a) {
-	var re = / /g;
-	for (var i = 0; i < a.length; ++i)
-		a[i] = a[i].replace(re, "&nbsp;");
-}
-
-// declare all the verb stems that correspond to preference verb
+// Add vocabulary for the app below
 var preference_verbs = []
 preference_verbs.push("détest");
 preference_verbs.push("aim");
@@ -219,7 +198,6 @@ food_masculine.push("crabe");
 food_masculine.push("pain");
 food_masculine.sort();
 
-// Add to the list of feminine food
 var food_feminine = [];
 food_feminine.push("grenouille");
 food_feminine.push("carotte");
@@ -294,6 +272,33 @@ neg1.push("n'");
 var neg2 = [];
 neg2.push("&nbsp;");
 neg2.push("pas");
+
+// Pick a congratulary message at random
+function getBravoMessage() {
+	var r = Math.floor((Math.random() * bravo.length));
+	return bravo[r];
+}
+
+function setScore(score) {
+	localStorage.setItem('score', score);
+}
+
+function getScore() {
+	if (!localStorage.getItem('score'))
+		setScore(0);
+
+	return Number(localStorage.getItem('score'));
+}
+
+function displayScore() {
+	document.getElementById('sw-score').innerHTML = 'Score: ' + getScore();
+}
+
+function addNBSP(a) {
+	var re = / /g;
+	for (var i = 0; i < a.length; ++i)
+		a[i] = a[i].replace(re, "&nbsp;");
+}
 
 // returns whether something is part of an array
 function isInList(element, arr) {
@@ -457,7 +462,6 @@ function is_RE_verb(verb_stem)
 	return isInList(verb_stem,verb_stem_re);
 }
 
-/* er verb_stems, ir verb_stems, re verb_stemes */
 function subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending, reason)
 {
 	if (is_ER_verb(verb_stem))
@@ -477,21 +481,7 @@ function isFoodPlural(food)
 }
 
 function startsWithVowel(word) {
-	var first_letter = word[0];
-	if (first_letter == "a" ||
-		first_letter == "e" ||
-		first_letter == "i" ||
-		first_letter == "o" ||
-		first_letter == "u" ||
-		first_letter == "y" ||
-		first_letter == "h")
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return isInList(word[0], ['a','i','o','u','y','h']);
 }
 
 function endsWith(word, c) {
@@ -504,26 +494,12 @@ function endsWithApostrophe(word) {
 
 function isFoodMasculine(food)
 {
-	if (isInList(food,food_masculine))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return isInList(food,food_masculine);
 }
 
 function isFoodFeminine(food)
 {
-	if (isInList(food,food_feminine))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return isInList(food,food_feminine);
 }
 
 
@@ -814,8 +790,8 @@ function openFrench() {
 	SpinningWheel.addSlot(food,'left',3);
 	
 	SpinningWheel.setCancelAction(cancel);
-	SpinningWheel.setDoneAction(done);
-	SpinningWheel.setRulesAction(rules);
+	SpinningWheel.setDoneAction(verifySentence);
+	SpinningWheel.setRulesAction(displayRules);
 	
 	SpinningWheel.open();
 
@@ -826,14 +802,7 @@ function openFrench() {
 	displayScore();
 }
 
-var bravo = [ 'Bravo', 'Super', 'Bien joué', 'Continue!', 'Cool, cool!' ];
-
-function getBravoMessage() {
-	var r = Math.floor((Math.random() * bravo.length));
-	return bravo[r];
-}
-
-function done() {
+function verifySentence() {
 	var phrase = '';
 	var results = SpinningWheel.getSelectedValues();
 
@@ -1109,18 +1078,20 @@ function done() {
 	}
 }
 
-function rules() {
+function displayRules() {
 //	document.getElementById('result').innerHTML = 'hello';
 //	document.getElementById('result').innerHTML = 'Verbs of preference (aimer, détester, préférer, adorer) &rarr; le, la, l&#39, les<br />Oter verbs &rarr; du, de la, des, de l&#39 for positive sentences; de, d&#39 for negative sentences';
 //	document.getElementById('result').innerHTML = 'Verbs of preference &rarr; le, la, l&#39, les<br />Other verbs: &oplu; sentence &rarr; du, de la, des, de l&#39;&nbsp;&nbsp;&ominus; sentence &rarr; de, d&#39';
 	document.getElementById('result').innerHTML = 'Preference verbs (aimer/détester/préférer/adorer) = le/la/l&#39/les<br />Other verbs: <span class="highlight">&oplus;sentence</span> du/de la/de l&#39/des&nbsp;&nbsp;&nbsp;<span class="highlight">&ominus;sentence</span> de/d&#39';
 }
 
+// unused
 function cancel() {
 	document.getElementById('result').innerHTML = 'cancelled!';
 }
 
 
+// testing below
 function assertValid(subject, negation1, verb_stem, verb_ending, negation2, partitif, food) {
 	reason = []
 	console.log(' ');

@@ -7,7 +7,7 @@
     <author email="dev@2lingua.com" href="http://www.2lingua.com">
         2Lingua LLC
     </author>
-    <content src="index.html" />
+    <content src="home.html" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
     <preference name="Orientation" value="landscape" />

@@ -3,9 +3,13 @@ body {
 	text-align:center; 
 	font-family:Chalkduster,helvetica; 
 	background-image:url(../img/chalkboard-black.jpg); 
+	-webkit-background-size: cover;
+	background-size: cover;
 } 
 
 button { font-size:16px; }
+
+h1, h2, h3, h4, h5 { color: white; }
 
 .mistake { border-bottom: 3px double; border-color: red;}
 .hint { color:red; font-size:14px;}

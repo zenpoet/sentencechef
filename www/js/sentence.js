@@ -38,8 +38,6 @@ preference_verbs.push("préfér");
 preference_verbs.push("préfèr");
 preference_verbs.sort();
 
-// -------------------------------------------------------------
-// Add to the list of subject pronouns
 var subject_pronoun = [];
 subject_pronoun.push("J'");
 subject_pronoun.push("Je");
@@ -52,7 +50,6 @@ subject_pronoun.push("Vous");
 subject_pronoun.push("Ils");
 subject_pronoun.push("Elles");
 
-// Add to the list of singular subjects
 var subject_singular = [];
 subject_singular.push("Mon chien");
 subject_singular.push("Ma fille");
@@ -73,15 +70,11 @@ subject_singular.push("Ma grand-mère");
 subject_singular.push("Mon frère");
 subject_singular.push("Mon cousin");
 subject_singular.push("Ma cousine");
-/*
-subject_singular.push("John");
-subject_singular.push("Sophie");
-subject_singular.push("Jacques");
-subject_singular.push("Nathalie");
-*/
 subject_singular.push("Le professeur");
 subject_singular.push("David");
 subject_singular.push("Grace");
+subject_singular.push("Kim");
+subject_singular.push("Karine");
 subject_singular.push("Madicyn");
 subject_singular.push("Un garçon");
 subject_singular.push("Ma chienne");
@@ -93,7 +86,6 @@ subject_singular.push("La personne");
 subject_singular.sort();
 addNBSP(subject_singular);
 
-// Add to the list of plural subjects
 var subject_plural = [];
 subject_plural.push("Mes soeurs");
 subject_plural.push("Mes chats");
@@ -130,7 +122,6 @@ subject_plural.push("Megan et Vito");
 subject_plural.sort();
 addNBSP(subject_plural);
 
-// Add to the list of subjects and "et moi"
 var subject_plus_moi = [];
 subject_plus_moi.push("Griffin et moi");
 subject_plus_moi.push("Marian et moi");
@@ -144,7 +135,6 @@ subject_plus_moi.push("Les villageois et moi");
 subject_plus_moi.sort();
 addNBSP(subject_plus_moi);
 
-// Add to the list of ER verb stem
 var verb_stem_er = [];
 verb_stem_er.push("cuisin");
 verb_stem_er.push("donn");
@@ -175,22 +165,18 @@ verb_stem_er.push("achet");
 verb_stem_er.push("achèt");
 verb_stem_er.sort();
 
-// Add to the list of IR verb stem
 var verb_stem_ir = [];
 verb_stem_ir.push("chois");
 verb_stem_ir.push("fin");
 verb_stem_ir.sort();
 
-// Add to the list of RE verb stem
 var verb_stem_re = [];
 verb_stem_re.push("vend");
 verb_stem_re.push("rend");
-//verb_stem_re.push("détrui");
 verb_stem_re.push("mord");
 verb_stem_re.push("perd");
 verb_stem_re.sort();
 
-// Add to the list of verb endings
 var verb_ending = [];
 verb_ending.push("e");
 verb_ending.push("es");
@@ -206,7 +192,6 @@ verb_ending.push("ez");
 verb_ending.push("issez");
 verb_ending.push("issent");
 
-// Add to the list of partitif
 var partitif = [];
 partitif.push("du");
 partitif.push("de la");
@@ -221,7 +206,6 @@ partitif.push("l'");
 partitif.sort();
 addNBSP(partitif);
 
-// Add to the list of masculine food
 var food_masculine = [];
 food_masculine.push("poisson");
 food_masculine.push("beurre");
@@ -237,6 +221,7 @@ food_masculine.sort();
 
 // Add to the list of feminine food
 var food_feminine = [];
+food_feminine.push("grenouille");
 food_feminine.push("carotte");
 food_feminine.push("dinde");
 food_feminine.push("quiche");
@@ -263,6 +248,7 @@ food_feminine.sort();
 addNBSP(food_feminine);
 
 var food_plural = [];
+food_plural.push("grenouilles");
 food_plural.push("pains");
 food_plural.push("frites");
 food_plural.push("artichauts");
@@ -309,8 +295,7 @@ var neg2 = [];
 neg2.push("&nbsp;");
 neg2.push("pas");
 
-// this is a function that returns whether
-// something is part of an array
+// returns whether something is part of an array
 function isInList(element, arr) {
 	var re1 = /&nbsp;/g;
 	var re2 = / /g;
@@ -343,9 +328,8 @@ function verbJeter(subject, verb_stem, verb_ending, reason) {
 }
 
 function verbAccent(subject, verb_stem, verb_ending, reason) {
-  // check special case for préférer and congeler
+  // check special case for préférer, congeler, acheter
   if (verb_stem=='préfér' || verb_stem=='congel' || verb_stem=='achet') { 
-    // must be nous vous or equivalent
 	if (subject != "Nous" && subject != "Vous" && !isInList(subject, subject_plus_moi)) {
 	  reason.push('special_case_verb_accent');
 	  reason.push('verb_stem');
@@ -376,7 +360,7 @@ function subjectVerbAgreement_ER(subject, verb_stem, verb_ending, reason) {
     return true;
   } 
   else if (subject == "Nous" || isInList(subject, subject_plus_moi)) {
-	if (ends_with(verb_stem, "g")) {
+	if (endsWith(verb_stem, "g")) {
 		return verb_ending == "eons";
 	}
   	else {
@@ -460,26 +444,17 @@ function subjectVerbAgreement_RE(subject, verb_stem, verb_ending) {
 
 function is_ER_verb(verb_stem)
 {
-	if (isInList(verb_stem, verb_stem_er))
-		return true;
-	else
-		return false;
+	return isInList(verb_stem, verb_stem_er);
 }
 
 function is_IR_verb(verb_stem)
 {
-	if (isInList(verb_stem, verb_stem_ir))
-		return true;
-	else
-		return false;
+	return isInList(verb_stem, verb_stem_ir);
 }
 
 function is_RE_verb(verb_stem)
 {
-	if (isInList(verb_stem,verb_stem_re))
-		return true;
-	else
-		return false;
+	return isInList(verb_stem,verb_stem_re);
 }
 
 /* er verb_stems, ir verb_stems, re verb_stemes */
@@ -492,24 +467,16 @@ function subjectAgreesWithVerbEnding(subject, verb_stem, verb_ending, reason)
 	else if (is_RE_verb(verb_stem))
 		return subjectVerbAgreement_RE(subject, verb_stem, verb_ending);			
 	else {
-		console.log("not an er, ir or re verb_stem");
 		return false;
 	}
 }
 
-function is_food_plural(food)
+function isFoodPlural(food)
 {
-	if (isInList(food, food_plural))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return isInList(food, food_plural);
 }
 
-function starts_with_vowel(word) {
+function startsWithVowel(word) {
 	var first_letter = word[0];
 	if (first_letter == "a" ||
 		first_letter == "e" ||
@@ -527,15 +494,15 @@ function starts_with_vowel(word) {
 	}
 }
 
-function ends_with(word, c) {
+function endsWith(word, c) {
 	return word[word.length-1] == c;
 }
 
-function ends_with_apostrophe(word) {
-	return ends_with(word, "'");
+function endsWithApostrophe(word) {
+	return endsWith(word, "'");
 }
 
-function is_food_masculine(food)
+function isFoodMasculine(food)
 {
 	if (isInList(food,food_masculine))
 	{
@@ -547,7 +514,7 @@ function is_food_masculine(food)
 	}
 }
 
-function is_food_feminine(food)
+function isFoodFeminine(food)
 {
 	if (isInList(food,food_feminine))
 	{
@@ -564,13 +531,13 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 {
 	if (isInList(verb_stem, preference_verbs))
 	{
-		if (starts_with_vowel(food) && partitif == "l'")
+		if (startsWithVowel(food) && partitif == "l'")
 			return true;
-		else if (is_food_masculine(food) && partitif == "le")
+		else if (isFoodMasculine(food) && partitif == "le")
 			return true;
-		else if (is_food_feminine(food) && partitif == "la")
+		else if (isFoodFeminine(food) && partitif == "la")
 			return true;
-		else if (is_food_plural(food) && partitif == "les")
+		else if (isFoodPlural(food) && partitif == "les")
 			return true;
 		else
 		{
@@ -582,7 +549,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 	{
 		if (sentence_positive)
 		{
-			if (is_food_plural(food))
+			if (isFoodPlural(food))
 			{
 				if (partitif == "des")
 					return true;
@@ -596,7 +563,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 			}
 			else 
 			{
-				if (starts_with_vowel(food))
+				if (startsWithVowel(food))
 				{
 					if (partitif == "de l'")
 						return true;
@@ -610,7 +577,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 				}
 				else
 				{
-					if (is_food_masculine(food))
+					if (isFoodMasculine(food))
 					{
 						if (partitif == "du")
 							return true;
@@ -622,7 +589,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 							return false;
 						}
 					}
-					else if (is_food_feminine(food))
+					else if (isFoodFeminine(food))
 					{
 						if (partitif == "de la")
 							return true;
@@ -643,9 +610,9 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 				reason.push('negative_sentence_d');
 				return false;
 			}
-			else if (partitif == 'de' && !starts_with_vowel(food))
+			else if (partitif == 'de' && !startsWithVowel(food))
 				return true;
-			else if (starts_with_vowel(food) && partitif == "d'") {
+			else if (startsWithVowel(food) && partitif == "d'") {
 				return true;
 			} else {
 				reason.push('negative_sentence_unknown_2');
@@ -661,7 +628,7 @@ function partitifAgreesWithPreference(verb_stem, partitif, food, sentence_positi
 function foodPartitifAgreement(partitif, food)
 {
 	if (partitif == 'de') return true;
-	else if (partitif == "d'" && starts_with_vowel(food))
+	else if (partitif == "d'" && startsWithVowel(food))
 		return true;
 	else if ((partitif == 'des' || partitif == 'les') && !isInList(food, food_plural))
 		return false;
@@ -677,15 +644,15 @@ function foodPartitifAgreement(partitif, food)
 
 function foodPartitifLiaison(partitif, food)
 {
-	if (isInList(partitif, ["d'", "de l'", "l'"]) && !starts_with_vowel(food))
+	if (isInList(partitif, ["d'", "de l'", "l'"]) && !startsWithVowel(food))
 		return false;
-	else if (starts_with_vowel(food) && !isInList(partitif, ["d'", "de l'", "l'", "des", "les"]))
+	else if (startsWithVowel(food) && !isInList(partitif, ["d'", "de l'", "l'", "des", "les"]))
 		return false;
 	else
 		return true;
 }
 
-function is_sentence_positive(negation1, negation2)
+function isSentencePositive(negation1, negation2)
 {
 	return !(negation1=='ne' || negation1=="n'" || negation2=='pas');
 }
@@ -696,11 +663,11 @@ function displaySentence(subject, negation1, verb_stem, verb_ending, negation2, 
 }
 
 function subjectVerbApostrophe(subject, negation1, verb_stem, reason) {
-	if (subject == 'Je' && !negation1 && starts_with_vowel(verb_stem)) {
+	if (subject == 'Je' && !negation1 && startsWithVowel(verb_stem)) {
 		reason.push('subject_verb_apostrophe1');
 		return false;
 	}
-	else if (subject == "J'" && !negation1 && !starts_with_vowel(verb_stem)) {
+	else if (subject == "J'" && !negation1 && !startsWithVowel(verb_stem)) {
 		reason.push('subject_verb_apostrophe2');
 		return false;
 	}
@@ -716,7 +683,7 @@ function subjectVerbApostrophe(subject, negation1, verb_stem, reason) {
 function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, partitif, food, reason) 
 {
 	var isValid = true;
-	var sentence_positive = is_sentence_positive(negation1, negation2);
+	var sentence_positive = isSentencePositive(negation1, negation2);
 
 	if (reason == undefined) reason = [];
 
@@ -762,11 +729,11 @@ function isValidSentence(subject, negation1, verb_stem, verb_ending, negation2, 
 			console.log(reason.toString());
 			return false;
 		}
-		else if ( (negation1 == "n'" && !starts_with_vowel(verb_stem)) ||
-			(negation1 == "ne" && starts_with_vowel(verb_stem)) ) {
+		else if ( (negation1 == "n'" && !startsWithVowel(verb_stem)) ||
+			(negation1 == "ne" && startsWithVowel(verb_stem)) ) {
 			reason.push('negation1');
 			reason.push('verb_vowel_agree');
-			if (starts_with_vowel(verb_stem))
+			if (startsWithVowel(verb_stem))
 				reason.push('verb_start_vowel');
 			else
 				reason.push('verb_start_consonant');
@@ -879,7 +846,7 @@ function done() {
 	var neg2 = results.values[4].replace(re,'');
 	var partitif = results.values[5].replace(re, ' ');
 	var food = results.values[6].replace(re,' ');
-    var sentence_positive = is_sentence_positive(neg1, neg2);
+    var sentence_positive = isSentencePositive(neg1, neg2);
 	var reason = [];
 	var valid_sentence = isValidSentence(subject, neg1, verb_stem, verb_ending, neg2, partitif, food, reason);
 
@@ -915,7 +882,7 @@ function done() {
 	}
 
 	if (valid_sentence) {
-		if ((subject == "J'" || neg1 == "n'") && starts_with_vowel(verb_stem)) {
+		if ((subject == "J'" || neg1 == "n'") && startsWithVowel(verb_stem)) {
 			phrase += '';
 		}
 		else {
@@ -974,17 +941,17 @@ function done() {
 	if (!valid_sentence && isInList('partitif', reason))
 		phrase += '</span>';
 
-	if (valid_sentence && starts_with_vowel(food) && (ends_with_apostrophe(neg2) || ends_with_apostrophe(partitif))) 
+	if (valid_sentence && startsWithVowel(food) && (endsWithApostrophe(neg2) || endsWithApostrophe(partitif))) 
 		phrase += ''; 
-	else if (valid_sentence && (!starts_with_vowel(food))) {
+	else if (valid_sentence && (!startsWithVowel(food))) {
 		phrase += ' '; 
 	}
-	else if (!valid_sentence && starts_with_vowel(food)) 
+	else if (!valid_sentence && startsWithVowel(food)) 
 		phrase += ' '; 
 	else if (!isInList('food_partitif_liaison', reason)) {
 		phrase += ' '; 
 	}
-	else if (!starts_with_vowel(food)) {
+	else if (!startsWithVowel(food)) {
 		phrase += ' '; 
 	}
 
@@ -1053,7 +1020,7 @@ function done() {
 			}
 			else if (isInList(food, food_plural) && partitif != "les") {
 				hint = '<span class="hint">masculine, feminine or plural?</span>';
-			} else if (starts_with_vowel(food) && partitif != "l'") {
+			} else if (startsWithVowel(food) && partitif != "l'") {
 				hint = '<span class="hint">food starts with vowel</span>';
 			} else {
 				hint = '<span class="hint">masculine, feminine or plural?</span>';
@@ -1063,10 +1030,10 @@ function done() {
 			if (isInList(food, food_plural) && partitif == "les") {
 				hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
 			} 
-			else if (isInList(food, food_feminine) && partitif == "la" && !starts_with_vowel(food)) {
+			else if (isInList(food, food_feminine) && partitif == "la" && !startsWithVowel(food)) {
 				hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
 			} 
-			else if ((isInList(food, food_feminine) || isInList(food, food_masculine)) && partitif == "l'" && starts_with_vowel(food)) {
+			else if ((isInList(food, food_feminine) || isInList(food, food_masculine)) && partitif == "l'" && startsWithVowel(food)) {
 				hint = "<span class='hint'>grammatically ok, but alas, not a partitive</span>";
 			} 
 			else if (isInList(food, food_masculine) && partitif == "le") {
@@ -1079,7 +1046,7 @@ function done() {
 				if (isInList(food, food_plural) && partitif != "des") {
 					hint = '<span class="hint">masculine, feminine or plural?</span>';
 				}
-				else if (starts_with_vowel(food) && partitif != "de l'") {
+				else if (startsWithVowel(food) && partitif != "de l'") {
 					hint = '<span class="hint">food starts with vowel</span>';
 				} else {
 					hint = '<span class="hint">feminine, masculine or plural?</span>';
@@ -1092,10 +1059,10 @@ function done() {
 				else if (!isInList(partitif, ["de", "d'"])) {
 					hint = '<span class="hint">Not a preference verb &amp; negative sentence: use de or d&#39</span>';
 				}
-				else if (starts_with_vowel(food) && partitif != "d'") {
+				else if (startsWithVowel(food) && partitif != "d'") {
 					hint = '<span class="hint">careful, food starts with vowel</span>';
 				}
-				else if (!starts_with_vowel(food) && partitif != "de") {
+				else if (!startsWithVowel(food) && partitif != "de") {
 					hint = '<span class="hint">food does not start with a vowel</span>';
 				}
 			}

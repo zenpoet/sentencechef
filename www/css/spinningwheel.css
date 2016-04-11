@@ -102,7 +102,6 @@
 	padding:0 4px; 
 	height:44px;
 	overflow:hidden;
-/*	font:bold 24px/44px Helvetica,sans-serif; */
 	font:bold 18px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
 }
 
@@ -112,4 +111,30 @@
 	height:183px;
 	border-width:16px;
 	-webkit-border-image:url(../img/sw-alpha.png) 16;
+}
+
+/* Overwrite settings for different devices */
+
+/* #### iPhone 4+ Portrait or Landscape #### */
+@media screen and (min-device-width: 320px) and (-webkit-min-device-pixel-ratio: 2) {
+	#sw-slots li {
+		padding:0 4px; 
+		font:bold 14px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
+	}	
+}
+
+/* #### iPhone 6 and 6 plus Portrait or Landscape #### */
+@media (min-device-height: 667px) and (min-device-width: 375px) and (-webkit-min-device-pixel-ratio: 2) {
+	#sw-slots li {
+		padding:0 8px; 
+		font:bold 18px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
+	}
+}
+
+/* #### Tablets Portrait or Landscape #### */
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+	#sw-slots li {
+		padding:0 8px; 
+		font:bold 24px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
+	}
 }

@@ -17,10 +17,6 @@ button { font-size:16px; }
 @media screen and (min-device-width: 320px) and (-webkit-min-device-pixel-ratio: 2) {
 	.hint { color:red; font-size:12px;}
 	#result { margin:2px; padding:4px; font-size:12px; } 
-	#sw-slots li {
-		padding:0 4px; 
-		font:bold 14px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
-	}	
 }
 
 /* #### iPhone 5 Portrait or Landscape #### */
@@ -33,18 +29,10 @@ button { font-size:16px; }
 @media (min-device-height: 667px) and (min-device-width: 375px) and (-webkit-min-device-pixel-ratio: 2) {
 	.hint { color:red; font-size:18px;}
 	#result { line-height: 150%; margin:20px; padding:10px; font-size:18px; } 
-	#sw-slots li {
-		padding:0 8px; 
-		font:bold 18px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
-	}
 }
 
 /* #### Tablets Portrait or Landscape #### */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
 	.hint { color:red; font-size:24px;}
 	#result { line-height: 200%; margin:50px; padding:30px; font-size:24px; } 
-	#sw-slots li {
-		padding:0 8px; 
-		font:bold 24px/44px Noteworthy,HelveticaNeue,Helvetica,sans-serif; 
-	}
 }

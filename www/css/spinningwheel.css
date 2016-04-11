@@ -33,14 +33,14 @@
 }
 
 #sw-glossary {
-	left:80px; 
+	left:120px; 
 	float:left;
 	color:white;
 	-webkit-border-image:url(../img/sw-button-cancel.png) 5;
 }
 
 #sw-rules {
-	left:157px; 
+	left:200px; 
 	float:left;
 	color:white;
 	-webkit-border-image:url(../img/sw-button-cancel.png) 5;

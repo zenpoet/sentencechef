@@ -19,6 +19,10 @@ function getScore() {
 	return Number(localStorage.getItem('score'));
 }
 
+function displayScore() {
+	document.getElementById('sw-score').innerHTML = 'Score: ' + getScore();
+}
+
 function addNBSP(a) {
 	var re = / /g;
 	for (var i = 0; i < a.length; ++i)
@@ -1000,7 +1004,8 @@ function done() {
 		} else {
 			document.getElementById('result').innerHTML = phrase + '<br /><span class="bravo">' + getBravoMessage() + '</span>';  
 		}
-		document.getElementById('sw-score').innerHTML = 'Score: ' + getScore();
+
+		displayScore();
 	} else {
 		var hint = '';
 		if (isInList('special_case_verb_accent', reason))

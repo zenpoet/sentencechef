@@ -835,6 +835,7 @@ function openFrench() {
 	
 	SpinningWheel.setCancelAction(cancel);
 	SpinningWheel.setDoneAction(done);
+	SpinningWheel.setRulesAction(rules);
 	
 	SpinningWheel.open();
 
@@ -1124,6 +1125,13 @@ function done() {
     //    hint += '<br />' + reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
 	}
+}
+
+function rules() {
+//	document.getElementById('result').innerHTML = 'hello';
+//	document.getElementById('result').innerHTML = 'Verbs of preference (aimer, détester, préférer, adorer) &rarr; le, la, l&#39, les<br />Oter verbs &rarr; du, de la, des, de l&#39 for positive sentences; de, d&#39 for negative sentences';
+//	document.getElementById('result').innerHTML = 'Verbs of preference &rarr; le, la, l&#39, les<br />Other verbs: &oplu; sentence &rarr; du, de la, des, de l&#39;&nbsp;&nbsp;&ominus; sentence &rarr; de, d&#39';
+	document.getElementById('result').innerHTML = 'Preference verbs (aimer/détester/préférer/adorer) = le/la/l&#39/les<br />Other verbs: <span class="highlight">&oplus;sentence</span> du/de la/de l&#39/des&nbsp;&nbsp;&nbsp;<span class="highlight">&ominus;sentence</span> de/d&#39';
 }
 
 function cancel() {

@@ -15,7 +15,7 @@
 	opacity: 0.9;
 }
 
-#sw-cancel, #sw-done, #sw-score {
+#sw-cancel, #sw-done, #sw-score, #sw-glossary, #sw-rules {
 	position:absolute;
 	top:7px;
 	height:20px; line-height:20px;
@@ -29,6 +29,20 @@
 #sw-cancel {
 	left:7px;
 	float:left;
+	-webkit-border-image:url(../img/sw-button-cancel.png) 5;
+}
+
+#sw-glossary {
+	left:80px; 
+	float:left;
+	color:white;
+	-webkit-border-image:url(../img/sw-button-cancel.png) 5;
+}
+
+#sw-rules {
+	left:157px; 
+	float:left;
+	color:white;
 	-webkit-border-image:url(../img/sw-button-cancel.png) 5;
 }
 

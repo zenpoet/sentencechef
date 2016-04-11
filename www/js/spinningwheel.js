@@ -26,7 +26,7 @@ var SpinningWheel = {
 	handleEvent: function (e) {
 		if (e.type == 'touchstart') {
 			this.lockScreen(e);
-			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done') {
+			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules') {
 				this.tapDown(e);
 			} else if (e.currentTarget.id == 'sw-frame') {
 				this.scrollStart(e);
@@ -34,13 +34,13 @@ var SpinningWheel = {
 		} else if (e.type == 'touchmove') {
 			this.lockScreen(e);
 			
-			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done') {
+			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules') {
 				this.tapCancel(e);
 			} else if (e.currentTarget.id == 'sw-frame') {
 				this.scrollMove(e);
 			}
 		} else if (e.type == 'touchend') {
-			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done') {
+			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules') {
 				this.tapUp(e);
 			} else if (e.currentTarget.id == 'sw-frame') {
 				this.scrollEnd(e);
@@ -115,7 +115,7 @@ var SpinningWheel = {
 		div.id = 'sw-wrapper';
 		div.style.top = window.innerHeight + window.pageYOffset + 'px';		// Place the SW down the actual viewing screen
 		div.style.webkitTransitionProperty = '-webkit-transform';
-		div.innerHTML = '<div id="sw-header">' + '<div id="sw-score">Score: 0</div><div id="sw-done">Verify</' + 'div></' + 'div><div id="sw-slots-wrapper"><div id="sw-slots"></' + 'div></' + 'div><div id="sw-frame"></' + 'div>';
+		div.innerHTML = '<div id="sw-header">' + '<div id="sw-score">Score: 0</div><div id="sw-glossary">Glossary</div><div id="sw-rules">Rules</div><div id="sw-done">Verify</' + 'div></' + 'div><div id="sw-slots-wrapper"><div id="sw-slots"></' + 'div></' + 'div><div id="sw-frame"></' + 'div>';
 
 		document.body.appendChild(div);
 
@@ -166,6 +166,7 @@ var SpinningWheel = {
 		// Cancel/Done buttons events
 //		document.getElementById('sw-cancel').addEventListener('touchstart', this, false);
 		document.getElementById('sw-done').addEventListener('touchstart', this, false);
+		document.getElementById('sw-rules').addEventListener('touchstart', this, false);
 
 		// Add scrolling to the slots
 		this.swFrame.addEventListener('touchstart', this, false);
@@ -193,6 +194,7 @@ var SpinningWheel = {
 
 //		document.getElementById('sw-cancel').removeEventListener('touchstart', this, false);
 		document.getElementById('sw-done').removeEventListener('touchstart', this, false);
+		document.getElementById('sw-rules').removeEventListener('touchstart', this, false);
 
 		document.removeEventListener('touchstart', this, false);
 		document.removeEventListener('touchmove', this, false);
@@ -467,7 +469,11 @@ var SpinningWheel = {
 
 		if (e.currentTarget.id == 'sw-done') {
 			this.doneAction();
-		} else {
+		} 
+		else if (e.currentTarget.id == 'sw-rules') {
+			this.rulesAction();
+		}
+		else {
 			this.cancelAction();
 		}
 		
@@ -477,15 +483,15 @@ var SpinningWheel = {
 	setCancelAction: function (action) {
 		this.cancelAction = action;
 	},
-
 	setDoneAction: function (action) {
 		this.doneAction = action;
 	},
-	
+	setRulesAction: function (action) {
+		this.rulesAction = action;
+	},
 	cancelAction: function () {
 		return false;
 	},
-
 	cancelDone: function () {
 		return true;
 	}

@@ -846,7 +846,8 @@ function openFrench() {
 	var total_combinations = Object.keys(subject).length * Object.keys(neg1).length * Object.keys(verb).length * Object.keys(verb_ending).length * Object.keys(neg2).length * Object.keys(partitif).length * Object.keys(food).length;
 	total_combinations = Math.floor(total_combinations / 1000000);
 	document.getElementById('result').innerHTML = 'Over <font size=+1>' + total_combinations.toString() + ' MILLION combos</font><br />How many correct sentences can you find?';
-//	document.getElementById('result').innerHTML = 'Le prof dit: écrivez une phrase correcte<br />Il y a ' + total_combinations.toString() + ' combinaisons possibles';
+
+	displayScore();
 }
 
 var bravo = [ 'Bravo', 'Super', 'Bien joué', 'Continue!', 'Cool, cool!' ];

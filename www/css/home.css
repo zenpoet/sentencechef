@@ -9,4 +9,15 @@ body {
 
 button { font-size:16px; }
 
-.creators { font-size: 0.8em; }
+.creators { 
+	font-size: 0.8em; 
+	float: left;
+}
+
+.alignright { float: right; }
+.alignleft { float: left; }
+
+#togame {
+	color: cyan;
+	float: right;
+}

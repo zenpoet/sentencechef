@@ -16,15 +16,30 @@
 	window.addEventListener('load', function(){ setTimeout(function(){ window.scrollTo(0,0); }, 100); }, true);
 </script>
 
+<script type="text/javascript" src="js/hammer.js"></script>
+
+
 </head>
 
 <body>
 
+
 <p id="result"></p>
+
+<script type="text/javascript">
+		var hammertime = new Hammer(document.getElementById('result'));
+		hammertime.on('swipeleft', function(ev) {
+			window.location = 'glossary.html';
+		});
+		hammertime.on('swiperight', function(ev) {
+			window.location = 'home.html';
+		});
+</script>
 
 <script type="text/javascript">
 	openFrench();
 </script>
+
 
 </body>
 

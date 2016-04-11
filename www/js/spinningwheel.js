@@ -26,7 +26,7 @@ var SpinningWheel = {
 	handleEvent: function (e) {
 		if (e.type == 'touchstart') {
 			this.lockScreen(e);
-			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules') {
+			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules' || e.currentTarget.id == 'sw-glossary') {
 				this.tapDown(e);
 			} else if (e.currentTarget.id == 'sw-frame') {
 				this.scrollStart(e);
@@ -34,13 +34,13 @@ var SpinningWheel = {
 		} else if (e.type == 'touchmove') {
 			this.lockScreen(e);
 			
-			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules') {
+			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules' || e.currentTarget.id == 'sw-glossary') {
 				this.tapCancel(e);
 			} else if (e.currentTarget.id == 'sw-frame') {
 				this.scrollMove(e);
 			}
 		} else if (e.type == 'touchend') {
-			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules') {
+			if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done' || e.currentTarget.id == 'sw-rules' || e.currentTarget.id == 'sw-glossary') {
 				this.tapUp(e);
 			} else if (e.currentTarget.id == 'sw-frame') {
 				this.scrollEnd(e);
@@ -167,6 +167,7 @@ var SpinningWheel = {
 //		document.getElementById('sw-cancel').addEventListener('touchstart', this, false);
 		document.getElementById('sw-done').addEventListener('touchstart', this, false);
 		document.getElementById('sw-rules').addEventListener('touchstart', this, false);
+		document.getElementById('sw-glossary').addEventListener('touchstart', this, false);
 
 		// Add scrolling to the slots
 		this.swFrame.addEventListener('touchstart', this, false);
@@ -195,6 +196,7 @@ var SpinningWheel = {
 //		document.getElementById('sw-cancel').removeEventListener('touchstart', this, false);
 		document.getElementById('sw-done').removeEventListener('touchstart', this, false);
 		document.getElementById('sw-rules').removeEventListener('touchstart', this, false);
+		document.getElementById('sw-glossary').removeEventListener('touchstart', this, false);
 
 		document.removeEventListener('touchstart', this, false);
 		document.removeEventListener('touchmove', this, false);
@@ -473,6 +475,9 @@ var SpinningWheel = {
 		else if (e.currentTarget.id == 'sw-rules') {
 			this.rulesAction();
 		}
+		else if (e.currentTarget.id == 'sw-glossary') {
+			this.glossaryAction();
+		}
 		else {
 			this.cancelAction();
 		}
@@ -488,6 +493,9 @@ var SpinningWheel = {
 	},
 	setRulesAction: function (action) {
 		this.rulesAction = action;
+	},
+	setGlossaryAction: function (action) {
+		this.glossaryAction = action;
 	},
 	cancelAction: function () {
 		return false;

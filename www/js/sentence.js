@@ -93,7 +93,7 @@ subject_plural.push("Les docteurs");
 subject_plural.push("Les boulangers");
 subject_plural.push("Les pompiers");
 subject_plural.push("Les chefs");
-subject_plural.push("Les soldiers");
+subject_plural.push("Les soldats");
 subject_plural.push("Les animaux");
 subject_plural.push("Les gens");
 subject_plural.push("Kobi et Cameron");

@@ -22,22 +22,21 @@
 
 		<p>
 
+		<h2>Subject</h2>
 		<table align=center>
-				<tr align=center>
-						<th colspan=2>Subject</th>
-				</tr>
 				<tr><td><font color='cyan'>Je</font></td><td>I</td></tr>
 				<tr><td><font color='cyan'>Tu</font></td><td>You</td></tr>
-				<tr><td><font color='cyan'>Il/elle/on</font></td><td>He/she/it</td></tr>
+				<tr><td><font color='cyan'>Il/elle/on</font></td><td>He/she/one</td></tr>
 				<tr><td><font color='cyan'>Nous</font></td><td>We</td></tr>
 				<tr><td><font color='cyan'>Vous</font></td><td>You</td></tr>
 				<tr><td><font color='cyan'>Ils, elles</font></td><td>They</td></tr>
+				<tr><td><font color='cyan'>Mes grand-parents</font></td><td>My grandparents</td></tr>
 		</table>
 
+		<p>
+
+		<h2>Verbs</h2>
 		<table align=center>
-				<tr align=center>
-						<th colspan=2>Preference verbs</th>
-				</tr>
 				<tr><td><font color='cyan'>aimer</font></td><td>to like, to love</td></tr>
 				<tr><td><font color='cyan'>adorer</font></td><td>to love, to adore</td></tr>
 				<tr><td><font color='cyan'>détester</font></td><td>to dislike</td></tr>
@@ -45,16 +44,30 @@
 		</table>
 		<p>
 
+		<h2>Food</h2>
+		<table align=center>
+				<tr><td><font color='cyan'>choux <i>m.</i></font></td><td>cabbage</td></tr>
+				<tr><td><font color='cyan'>grenouille <i>f.</i></font></td><td>frog</td></tr>
+				<tr><td><font color='cyan'>fraise (f)</i></font></td><td>strawberry</td></tr>
+				<tr><td><font color='cyan'>framboise (f)</i></font></td><td>raspberry</td></tr>
+				<tr><td><font color='cyan'>escargots</font></td><td>snails</td></tr>
+				<tr><td><font color='cyan'>pomme <i>f.</i></font></td><td>apple</td></tr>
+				<tr><td><font color='cyan'>yaourt <i>m.</i></font></td><td>yogurt</td></tr>
+		</table>
+		<p>
 </div>
 
 <script type="text/javascript">
 		var hammertime = new Hammer(document.getElementById('glossary'));
 		hammertime.on('swipeleft', function(ev) {
 			window.location = 'home.html';
+			window.scrollTo(0,0);
 		});
 		hammertime.on('swiperight', function(ev) {
-			window.location = 'index.html';
+			window.location = 'game.html';
+			window.scrollTo(0,0);
 		});
+
 </script>
 
 </body>

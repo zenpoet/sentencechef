@@ -5,7 +5,6 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="format-detection" content="telephone=no">
 
-	<link rel="stylesheet" href="css/sentence.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="css/glossary.css" type="text/css" media="all" />
 
 	<title>Sentence Chef</title>
@@ -15,7 +14,7 @@
 </head>
 
 <body>
-		<div id='glossary'>
+		<div id='glossary'> 
 		<h2>Glossary</h2>
 		<a href='#subject'>subject</a> | <a href='#verb'>verbs</a> | <a href='#food'>food</a>
 
@@ -539,14 +538,11 @@
 <td><span class='english'>tomato</span></td>
 </tr>
 		<p>
+	
 </div>
 
 <script type="text/javascript">
 		var hammertime = new Hammer(document.getElementById('glossary'));
-		hammertime.on('swipeleft', function(ev) {
-			window.location = 'home.html';
-			window.scrollTo(0,0);
-		});
 		hammertime.on('swiperight', function(ev) {
 			window.location = 'game.html';
 			window.scrollTo(0,0);
@@ -556,7 +552,6 @@
 			window.location = 'game.html';
 			window.scrollTo(0,0);
 		});
-
 </script>
 
 </body>

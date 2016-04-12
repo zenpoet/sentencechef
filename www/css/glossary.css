@@ -2,25 +2,11 @@ body {
 	color:white;
 	text-align:center; 
 	font-family:Chalkduster,helvetica; 
-	background-image:url(../img/chalkboard-black.jpg); 
-	-webkit-background-size: cover;
-	background-size: cover;
+	background-image:url(../img/chalkboard-black.jpg);   
+	-webkit-background-size: cover; 
 } 
 
-button { font-size:16px; }
-
-.creators { 
-	font-size: 0.8em; 
-	float: left;
-}
-
-.alignright { float: right; }
-.alignleft { float: left; }
-
-#togame {
-	color: cyan;
-	float: right;
-}
+h1, h2, h3, h4, h5 { color: white; }
 
 #backtogame {
 	color: white;
@@ -44,12 +30,13 @@ table {
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
+	opacity:0.95;
 }
 
 .french {
-	color: cyan
+	color: cyan;
 }
 
 .english {
-	color: white
+	color: white;
 }

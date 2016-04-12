@@ -18,6 +18,7 @@
 		<div id='glossary'>
 		<h2>Glossary</h2>
 
+		<p id='backtogame'>&nbsp;&#8678;<br />back</p>
 		<a href='#subject'>subject</a> | <a href='#verbs'>verbs</a> | <a href='#food'>food</a>
 
 		<p>
@@ -64,6 +65,11 @@
 			window.scrollTo(0,0);
 		});
 		hammertime.on('swiperight', function(ev) {
+			window.location = 'game.html';
+			window.scrollTo(0,0);
+		});
+		var hammertime2 = new Hammer(document.getElementById('backtogame'));
+		hammertime2.on('tap', function(ev) {
 			window.location = 'game.html';
 			window.scrollTo(0,0);
 		});

@@ -1,0 +1,59 @@
+Courtney et sa mère:Courtney and her mother
+La personne:The person
+Le docteur et moi:The doctor and I
+Le professeur:The professor
+Le professeur et moi:The professor and I
+Les animaux:The animals
+Les animaux et moi:The animals and I
+Les boulangers:The bakers
+Les chefs:The chefs
+Les docteurs:The doctors
+Les gens:The people
+Les policiers:The policewomen, The policemen
+Les pompiers:The firefighters
+Les professeurs:The professors
+Les soldats:The soldiers
+Les travailleurs:The workers
+Les villageois:The villagers
+Les villageois et moi:The villagers and I
+Les étudiants:The students
+Ma chatte:My cat
+Ma chienne:My dog
+Ma cousine:My cousin
+Ma famille:My family
+Ma famille et moi:My family and I
+Ma fille:My daughter
+Ma grand-mère:My grandmother
+Ma mère:My mother
+Ma mère et moi:My mother and I
+Ma soeur:My sister
+Ma tante:My aunt
+Maggie et ses cousins:Maggie and her cousins
+Mes ami(e)s:My friends
+Mes chats:My cats
+Mes chattes:My cats
+Mes chiennes:My dogs
+Mes chiens:My dogs
+Mes cousines:My cousins
+Mes enfants:My children
+Mes filles:My daughters
+Mes fils:My sons
+Mes frères:My brothers
+Mes grand-parents:My grandparents
+Mes parents:My parents
+Mes soeurs:My sisters
+Mon ami(e): My friend
+Mon chat:My cat
+Mon chien:My dog
+Mon cousin:My cousin
+Mon enfant:My child
+Mon fils:My son
+Mon frère:My brother
+Mon grand-père:My grandfather
+Mon mari:My husband
+Mon neveu:My nephew
+Mon oncle:My uncle
+Mon père:My father
+Un garçon:A boy
+Un homme:A man
+Victoria et ses amis:Victoria and her friends

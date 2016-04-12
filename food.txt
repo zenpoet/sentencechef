@@ -1,0 +1,32 @@
+aspèrge (f): asparagus
+aubergine (f): eggplant
+banane (f): banana
+beurre (m): butter
+bonbon (m): candy
+boulette de viande (f): meatball
+carotte (f): carrot
+chocolat (m): chocolate
+crabe (m): crab
+crevette (f): shrimp
+crème brûlée (f): creme brulee
+crêpe (f): crepe
+dinde (f): turkey
+fraise (f): strawberry
+framboise (f): raspberry
+fromage (m): cheese
+glace (f): ice cream
+grenade (f): grenade
+grenouille (f): frog
+légume (m): vegetable
+myrtille (f): blueberry
+pain (m): bread
+pastèque (f): watermelon
+poisson (m): fish
+pomme (f): apple
+pomme de terre (f): potato
+quiche (f): quiche
+salade (f): salad
+sandwich (m): sandwich
+saucisse (f): sausage
+soupe (f): soup
+tomate (f): tomato

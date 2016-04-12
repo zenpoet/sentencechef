@@ -1,0 +1,27 @@
+acheter:to buy
+chauffer:to heat
+chercher:to look for
+choisir: to choose
+congeler: to freeze
+couper: to cut
+cuisiner: to cook
+cultiver: to cultivate
+dessiner: to draw
+donner: to give
+détester: to hate, to dislike
+finir: to finish
+jeter: to throw away
+laisser: to leave
+manger: to eat
+montrer: to show
+mordre: to bite
+mâcher: to chew
+mélanger: to mix
+perdre: to lose
+porter: to carry
+préférer: to prefer
+préparer: to prepare
+rendre: to return
+trouver: to find
+vendre: to sell
+voler: to steal

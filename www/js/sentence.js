@@ -938,6 +938,7 @@ function verifySentence() {
 		phrase = phrase.replace(re, ' ');
 		var utterThis = new SpeechSynthesisUtterance(phrase);
 		utterThis.lang = 'FR';
+		utterThis.rate = 0.8;
 		window.speechSynthesis.speak(utterThis);
 
 		if (!isInList(phrase, already_seen)) {

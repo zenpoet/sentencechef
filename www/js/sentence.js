@@ -1038,51 +1038,11 @@ function verifySentence() {
 			}
 		}
 
-			/*
-        else if (sentence_positive && !preference_verb && isInList('food_partitif_agreement', reason) && isInList(partitif, ["de", "d'"])) {
-				hint = '<span class="hint">Wrong partitive, review the rule for positive sentences</span>';
-        }
-        else if (preference_verb && isInList('food_partitif_agreement', reason) && !(isInList(partitif, ["l'", "le", "la", "les"]))) {
-				hint = '<span class="hint">For preference verbs, use l&#39, le, la or les</span>';
-        }
-        else if (preference_verb && isInList('food_partitif_liaison', reason) && (!isInList(partitif,["l'", "le", "la", "les"]))) {
-				hint = '<span class="hint">Use l&#39, le, la or les for preference verbs</span>';
-        }
-        else if (sentence_positive && preference_verb && isInList('food_partitif_agreement', reason) && isInList(partitif, ["l'", "le", "la", "les"])) {
-			hint = '<span class="hint">masculine, feminine, or plural?</span>';
-        }
-		else if (isInList('preference_verb_error', reason))
-				hint = '<span class="hint">Use l&#39, le, la or les for preference verbs</span>';
-        else if (sentence_positive && isInList('food_partitif_liaison', reason)) {
-            hint = '<span class="hint">Positive sentence, incorrect partitive</span>';
-        }
-        else if (isInList('food_partitif_agreement', reason)) {
-				hint = '<span class="hint">masculine, feminine, or plural?</span>';
-        }
-        else if (isInList('food_partitif_liaison', reason)) {
-				hint = '<span class="hint">Watch the article and the first letter of the noun</span>';
-        }
-        else if (sentence_positive && isInList('partitif', reason) && isInList('food', reason)) {
-                hint = '<span class="hint">Positive sentence, incorrect partitive</span>';
-        }
-		else if (isInList('negative_sentence_d', reason))
-				hint = "<span class='hint'>negative sentence, use <b>de</b> or <b>d'</b></span>";
-		else if (isInList('food_non_partitif', reason))
-				hint = "<span class='hint'>&quot;grammatically ok,&quot; but not a partitif</span>";
-		else if (isInList('partitif', reason))
-				hint = "<span class='hint'>incorrect application of the partitif</span>";
-		else
-				hint = "<span class='hint'>try again</span>";
-			*/
-    //    hint += '<br />' + reason.toString();
 		document.getElementById('result').innerHTML = phrase + '<br />' + hint;
 	}
 }
 
 function displayRules() {
-//	document.getElementById('result').innerHTML = 'hello';
-//	document.getElementById('result').innerHTML = 'Verbs of preference (aimer, détester, préférer, adorer) &rarr; le, la, l&#39, les<br />Oter verbs &rarr; du, de la, des, de l&#39 for positive sentences; de, d&#39 for negative sentences';
-//	document.getElementById('result').innerHTML = 'Verbs of preference &rarr; le, la, l&#39, les<br />Other verbs: &oplu; sentence &rarr; du, de la, des, de l&#39;&nbsp;&nbsp;&ominus; sentence &rarr; de, d&#39';
 	document.getElementById('result').innerHTML = 'Preference verbs (aimer/détester/préférer/adorer) = le/la/l&#39/les<br />Other verbs: <span class="highlight">&oplus;sentence</span> du/de la/de l&#39/des&nbsp;&nbsp;&nbsp;<span class="highlight">&ominus;sentence</span> de/d&#39';
 }
 

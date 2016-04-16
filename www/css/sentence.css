@@ -11,11 +11,23 @@ button { font-size:16px; }
 
 h1, h2, h3, h4, h5 { color: white; }
 
+.emphasize { border-bottom: 3px double; border-color: white;}
 .mistake { border-bottom: 3px double; border-color: red;}
 .hint { color:red; font-size:14px;}
 .bravo { color:cyan;}
 .highlight { color:cyan;}
+.partitive { color:cyan;}
+.example { font-style: oblique;}
+.number { font-size:1.3em; font-style: bold; }
 #result { margin:2px; padding:4px; font-size:16px;color:white } 
+
+#rules {color:white;}
+
+.choice-right {
+	color: cyan;
+	float: right;
+	clear: both;
+}
 
 /* #### iPhone 4+ Portrait or Landscape #### */
 @media screen and (min-device-width: 320px) and (-webkit-min-device-pixel-ratio: 2) {

@@ -16,23 +16,29 @@
 
 <body>
 <div id='myscreen'>
-		<h1>Lesson of the Day:</h1>
-		<h2>The French partitive</h2>
-		<!--		<a href="index.html"><button>Allons-y!</button></a> -->
+	<h1>Lesson of the Day:</h1>
+	<h3>The French partitive</h3>
+	<div id='rules'>
+		<p class='choice-right'>French partitive rules&nbsp;&#8680;</p>
+	</div>
+	<div id='play'>
+		<p class='choice-right'>Let's play&nbsp;&#8680;</p>
+	</div>
 
-		<!--		<p id='togame'>practice your partitive&rarr;</p> -->
-		<p id='togame'>practice your partitive&nbsp;&#8680;</p>
-
-		<p class='creators'>David&nbsp;B., Grace&nbsp;D., Kobi&nbsp;E., Cameron&nbsp;J., Jackson&nbsp;J., Griffin&nbsp;J., Megan&nbsp;K., Marian&nbsp;L., Maggie&nbsp;L., Madicyn&nbsp;L., Victoria&nbsp;O., Vito&nbsp;P., Courtney&nbsp;S., Kim&nbsp;W. and Karine&nbsp;B.
+	<p class='creators'>David&nbsp;B., Grace&nbsp;D., Kobi&nbsp;E., Cameron&nbsp;J., Jackson&nbsp;J., Griffin&nbsp;J., Megan&nbsp;K., Marian&nbsp;L., Maggie&nbsp;L., Madicyn&nbsp;L., Victoria&nbsp;O., Vito&nbsp;P., Courtney&nbsp;S., Kim&nbsp;W. and Karine&nbsp;B.</p>
 </div>
 
 <script type="text/javascript">
 		var hammertime = new Hammer(document.getElementById('myscreen'));
 		hammertime.on('swipeleft swiperight', function(ev) {
-			window.location = 'game.html';
+			window.location = 'rules.html';
 		});
-		var hammertime2 = new Hammer(document.getElementById('togame'));
-		hammertime2.on('swipeleft swiperight tap', function(ev) {
+		var hammertime2 = new Hammer(document.getElementById('rules'));
+		hammertime2.on('tap', function(ev) {
+			window.location = 'rules.html';
+		});
+		var hammertime3 = new Hammer(document.getElementById('play'));
+		hammertime3.on('tap', function(ev) {
 			window.location = 'game.html';
 		});
 </script>

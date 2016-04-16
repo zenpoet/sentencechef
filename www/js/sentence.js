@@ -1045,6 +1045,7 @@ function verifySentence() {
 
 function displayRules() {
 	document.getElementById('result').innerHTML = 'Preference verbs (aimer/détester/préférer/adorer) = le/la/l&#39/les<br />Other verbs: <span class="highlight">&oplus;sentence</span> du/de la/de l&#39/des&nbsp;&nbsp;&nbsp;<span class="highlight">&ominus;sentence</span> de/d&#39';
+	window.location="rules.html";
 }
 
 function glossary() {

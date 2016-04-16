@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" id="iphone-viewport" content="minimum-scale=1.0, maximum-scale=1.0, width=device-width" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="format-detection" content="telephone=no">
+
+	<link rel="stylesheet" href="css/sentence.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="css/rules.css" type="text/css" media="all" />
+
+	<title>Sentence Chef Rules</title>
+
+	<script type="text/javascript" src="js/hammer.js"></script>
+
+</head>
+
+<body>
+<div id='rules'> 
+	<h2>French Partitive</h2>
+
+	<p>Apply these 3 rules in this exact order to build your sentences.
+
+	<p><span class='number'>Rule 1</span>. If you are using a <span class='emphasize'>preference</span> verb, i.e., aimer, détester, préférer, or adorer, use <span class='highlight'>le, <span class='highlight'>la</span>, <span class='highlight'>l&#39</span> or <span class='highlight'>les</span>
+
+	<p class='example'>On déteste <span class='highlight'>la</span> pomme.<br>
+	Il aime <span class='highlight'>le</span> pain.<br>
+	Elle n'aime pas <span class='highlight'>l'</span> aubergine.<br>
+	Nous adorons <span class='highlight'>les</span> fraises.<br>
+	Vous ne préférez pas <span class='highlight'>les</span> framboises.
+
+	<p><span class='number'>Rule 2</span>. If it's <span class='emphasize'>not</span> a preference verb, and the sentence is <span class='emphasize'>positive</span>, use <span class='highlight'>du</span>, <span class='highlight'>de la</span>, <span class='highlight'>de l&#39</span> or <span class='highlight'>des</span>.
+
+	<p class='example'>Il mange <span class='highlight'>du</span> pain.<br>
+	Vous mangez <span class='highlight'>de l'</span> aubergine.<br>
+	Elle mange <span class='highlight'>de la</span> pomme.<br>
+	Nous mangeons <span class='highlight'>des</span> fraises.<br>
+
+	<p><span class='number'>Rule 3</span>. If it's <span class='emphasize'>not</span> a preference verb, and the sentence is <span class='emphasize'>negative</span>, use <span class='highlight'>de</span> or <span class='highlight'>d&#39</span>
+
+	<p class='example'>Elle ne mange pas <span class='highlight'>de</span> pain.<br>
+	Elle ne mange pas <span class='highlight'>d'</span> aubergines.<br>
+	Elle ne mange pas <span class='highlight'>de</span> fraises.
+</div>
+
+	<div id='play'>
+		<p class='choice-right'>Let's play&nbsp;&#8680;</p>
+	</div>
+
+<script type="text/javascript">
+		var hammertime = new Hammer(document.getElementById('play'));
+		hammertime.on('tap', function(ev) {
+			window.location = 'game.html';
+			window.scrollTo(0,0);
+		});
+		var hammertime2 = new Hammer(document.getElementById('rules'));
+		hammertime.on('swipeleft', function(ev) {
+			window.location = 'game.html';
+			window.scrollTo(0,0);
+		});
+</script>
+
+</body>
+
+</html>

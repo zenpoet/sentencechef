@@ -545,12 +545,13 @@
 		var hammertime = new Hammer(document.getElementById('glossary'));
 		hammertime.on('swiperight', function(ev) {
 			window.location = 'game.html';
-			window.scrollTo(0,0);
+		});
+		hammertime.on('swipeleft', function(ev) {
+			window.location = 'home.html';
 		});
 		var hammertime2 = new Hammer(document.getElementById('backtogame'));
 		hammertime2.on('tap', function(ev) {
 			window.location = 'game.html';
-			window.scrollTo(0,0);
 		});
 </script>
 

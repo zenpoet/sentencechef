@@ -38,7 +38,7 @@
 	<p><span class='number'>Rule 3</span>. If it's <span class='emphasize'>not</span> a preference verb, and the sentence is <span class='emphasize'>negative</span>, use <span class='highlight'>de</span> or <span class='highlight'>d&#39</span>
 
 	<p class='example'>Elle ne mange pas <span class='highlight'>de</span> pain.<br>
-	Elle ne mange pas <span class='highlight'>d'</span> aubergines.<br>
+	Elle ne mange pas <span class='highlight'>d'</span>aubergines.<br>
 	Elle ne mange pas <span class='highlight'>de</span> fraises.
 </div>
 
@@ -53,8 +53,12 @@
 			window.scrollTo(0,0);
 		});
 		var hammertime2 = new Hammer(document.getElementById('rules'));
-		hammertime.on('swipeleft', function(ev) {
+		hammertime2.on('swipeleft', function(ev) {
 			window.location = 'game.html';
+			window.scrollTo(0,0);
+		});
+		hammertime2.on('swiperight', function(ev) {
+			window.location = 'home.html';
 			window.scrollTo(0,0);
 		});
 </script>

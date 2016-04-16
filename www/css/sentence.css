@@ -36,7 +36,7 @@ h1, h2, h3, h4, h5 { color: white; }
 }
 
 /* #### iPhone 5 Portrait or Landscape #### */
-@media (device-height: 568px) and (device-width: 320px) and (-webkit-min-device-pixel-ratio: 2){
+umedia (device-height: 568px) and (device-width: 320px) and (-webkit-min-device-pixel-ratio: 2){
 	.hint { color:red; font-size:14px;}
 	#result { margin:2px; padding:4px; font-size:16px; } 
 }
@@ -51,4 +51,5 @@ h1, h2, h3, h4, h5 { color: white; }
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
 	.hint { color:red; font-size:24px;}
 	#result { line-height: 200%; margin:50px; padding:30px; font-size:24px; } 
+	.choice-right { color: cyan; float: right; clear: both; font-size:1.5em; }
 }

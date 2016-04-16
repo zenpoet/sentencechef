@@ -14,3 +14,8 @@ button { font-size:16px; }
 	float: left;
 }
 
+/* #### Tablets Portrait or Landscape #### */
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+	.creators { font-size: 1.5em; width: 70%; clear: both; margin: auto;}
+	#myscreen { padding: 40px;}
+}

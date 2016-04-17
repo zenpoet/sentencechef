@@ -258,7 +258,7 @@ food_plural.push("crevettes");
 food_plural.push("framboises");
 food_plural.push("crème brûlées");
 food_plural.push("myrtilles");
-food_plural.push("boulette de viandes");
+food_plural.push("boulettes de viande");
 food_plural.push("fraises");
 food_plural.push("tomates");
 food_plural.sort();

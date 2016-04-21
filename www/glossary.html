@@ -14,11 +14,11 @@
 </head>
 
 <body>
-		<div id='glossary'> 
+<div id='glossary'> 
 		<h2>Glossary</h2>
 		<a href='#subject'>subject</a> | <a href='#negation'>negation</a> | <a href='#verb'>verbs</a> | <a href='#food'>food</a>
 
-		<p id='backtogame'>&nbsp;&#8678;<br />back<br>&nbsp;<br></p>
+		<p id='backtogame'>&nbsp;<br>&nbsp;&#8678;<br />&nbsp;back&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;<br></p>
 
 		<p>
 
@@ -550,9 +550,12 @@
 <td><span class='french'>tomate (f)</span></td>
 <td><span class='english'>tomato</span></td>
 </tr>
-		<p>
-	
+</table>
+
 </div>
+
+<p id='backtogame2'>&nbsp;<br>&nbsp;&#8678;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;<br>
+</p>
 
 <script type="text/javascript">
 		var hammertime = new Hammer(document.getElementById('glossary'));
@@ -566,6 +569,11 @@
 		});
 		var hammertime2 = new Hammer(document.getElementById('backtogame'));
 		hammertime2.on('tap', function(ev) {
+			window.location = 'game.html';
+			window.scrollTo(0,0);
+		});
+		var hammertime3 = new Hammer(document.getElementById('backtogame2'));
+		hammertime3.on('tap', function(ev) {
 			window.location = 'game.html';
 			window.scrollTo(0,0);
 		});

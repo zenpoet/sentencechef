@@ -82,7 +82,7 @@ subject_plural.push("Mes parents");
 subject_plural.push("Mes fils");
 subject_plural.push("Courtney et sa mère");
 subject_plural.push("Mes filles");
-subject_plural.push("Mes grand-parents");
+subject_plural.push("Mes grands-parents");
 subject_plural.push("Les professeurs");
 subject_plural.push("Mes cousins");
 subject_plural.push("Mes cousines");
@@ -313,7 +313,7 @@ function isInList(element, arr) {
 }
 
 function isBlank(w) {
-	return w=="" || w=="&nbsp;";
+	return w=="" || w=="&nbsp;" || " ";
 }
 
 function verbJeter(subject, verb_stem, verb_ending, reason) {
